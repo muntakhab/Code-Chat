@@ -1,17 +1,65 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html>
 <head>
-<title>CodeChat Sign Up</title>
+<title>CodeChat Signup</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body>
+<body><h1>Create Account</h1><input id="email" type="email" placeholder="Email"><br><br>
 
-<h1>Create Account</h1>
+<input id="password" type="password" placeholder="Password"><br><br>
 
-<input type="email" placeholder="Email"><br><br>
+<button onclick="signup()">Create Account</button>
 
-<input type="password" placeholder="Password"><br><br>
+<p id="result"></p><script type="module">
 
-<button>Create Account</button>
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 
-</body>
+import {
+getAuth,
+createUserWithEmailAndPassword
+}
+from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDgOaEVjw-L7O83Wj-N7j_XQYO8RuX4sQU",
+  authDomain: "code-chat-a82d0.firebaseapp.com",
+  projectId: "code-chat-a82d0",
+  storageBucket: "code-chat-a82d0.firebasestorage.app",
+  messagingSenderId: "863595576976",
+  appId: "1:863595576976:web:61217f6961e3e3a5016215"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+window.signup = function(){
+
+const email =
+document.getElementById("email").value;
+
+const password =
+document.getElementById("password").value;
+
+createUserWithEmailAndPassword(
+auth,
+email,
+password
+)
+
+.then(() => {
+
+document.getElementById("result").innerHTML =
+"Account Created Successfully";
+
+})
+
+.catch((error) => {
+
+document.getElementById("result").innerHTML =
+error.message;
+
+});
+
+}
+
+</script></body>
 </html>
