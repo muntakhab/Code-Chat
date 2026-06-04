@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html>
 <head>
 <title>CodeChat Signup</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body>
-
-<h1>Create Account</h1>
+<body><h1>Create Account</h1><input id="username" type="text" placeholder="Username"><br><br>
 
 <input id="email" type="email" placeholder="Email"><br><br>
 
@@ -14,9 +11,7 @@
 
 <button onclick="signup()">Create Account</button>
 
-<p id="result"></p>
-
-<script type="module">
+<p id="result"></p><script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 
@@ -26,46 +21,59 @@ createUserWithEmailAndPassword
 }
 from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
+import {
+getFirestore,
+collection,
+addDoc
+}
+from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
 const firebaseConfig = {
-  apiKey: "AIzaSyDgOaEVjw-L7O83Wj-N7j_XQYO8RuX4sQU",
-  authDomain: "code-chat-a82d0.firebaseapp.com",
-  projectId: "code-chat-a82d0",
-  storageBucket: "code-chat-a82d0.firebasestorage.app",
-  messagingSenderId: "863595576976",
-  appId: "1:863595576976:web:61217f6961e3e3a5016215"
+apiKey: "AIzaSyDgOaEVjw-L7O83Wj-N7j_XQYO8RuX4sQU",
+authDomain: "code-chat-a82d0.firebaseapp.com",
+projectId: "code-chat-a82d0",
+storageBucket: "code-chat-a82d0.firebasestorage.app",
+messagingSenderId: "863595576976",
+appId: "1:863595576976:web:61217f6961e3e3a5016215"
 };
 
 const app = initializeApp(firebaseConfig);
+
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-window.signup = function(){
+window.signup = async function(){
 
+const username = document.getElementById("username").value;
 const email = document.getElementById("email").value;
 const password = document.getElementById("password").value;
 
-createUserWithEmailAndPassword(auth,email,password)
+try{
 
-.then(() => {
+const userCredential =
+await createUserWithEmailAndPassword(auth,email,password);
+
+await addDoc(collection(db,"users"),{
+username: username,
+email: email,
+uid: userCredential.user.uid
+});
 
 document.getElementById("result").innerHTML =
 "Account Created Successfully";
 
-setTimeout(() => {
-window.location.href = "login.html";
-}, 1000);
+setTimeout(()=>{
+window.location.href="login.html";
+},1000);
 
-})
-
-.catch((error) => {
+}catch(error){
 
 document.getElementById("result").innerHTML =
 error.message;
 
-});
+}
 
 }
 
-</script>
-
-</body>
+</script></body>
 </html>
