@@ -90,10 +90,14 @@ const params = new URLSearchParams(window.location.search);
 const receiverName = params.get("user");
 const receiverUid = params.get("uid");
 
-document.getElementById("user").innerHTML =
-"💬 Chat with " + receiverName;
-
 const myUid = localStorage.getItem("uid");
+
+document.getElementById("user").innerHTML =
+"💬 " + receiverName + "<br>Receiver UID: " + receiverUid;
+
+alert("MY UID = " + myUid);
+alert("RECEIVER UID = " + receiverUid);
+alert("USERNAME = " + receiverName);
 
 window.sendMessage = async function(){
 
@@ -125,8 +129,8 @@ snapshot.forEach((doc)=>{
 const data = doc.data();
 
 if(
-(data.sender===myUid && data.receiver===receiverUid) ||
-(data.sender===receiverUid && data.receiver===myUid)
+(data.sender === myUid && data.receiver === receiverUid) ||
+(data.sender === receiverUid && data.receiver === myUid)
 ){
 
 html += `
