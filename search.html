@@ -32,7 +32,8 @@ cursor:pointer;
 }
 </style></head><body><h2>🔍 Search Users</h2><input id="search" placeholder="Search username..."><div id="users"></div><script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 
 import {
 getFirestore,
@@ -55,14 +56,17 @@ const db = getFirestore(app);
 
 const usersDiv = document.getElementById("users");
 
-const snapshot = await getDocs(collection(db,"users"));
+const snapshot =
+await getDocs(collection(db,"users"));
 
 snapshot.forEach((doc)=>{
 
+const data = doc.data();
+
 usersDiv.innerHTML += `
 <div class="user"
-onclick="location.href='privatechat.html?user=${doc.data().username}'">
-👤 ${doc.data().username}
+onclick="location.href='privatechat.html?user=${data.username}&uid=${data.uid}'">
+👤 ${data.username}
 </div>
 `;
 
