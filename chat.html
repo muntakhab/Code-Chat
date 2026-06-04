@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CodeChat</title>
-
-<style>
+<title>CodeChat</title><style>
 body{
 background:#0f172a;
 color:white;
@@ -13,8 +10,11 @@ font-family:Arial,sans-serif;
 padding:20px;
 }
 
-h1{
-text-align:center;
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:15px;
 }
 
 #messages{
@@ -41,25 +41,23 @@ border-radius:8px;
 }
 
 button{
-padding:10px 20px;
+padding:10px 15px;
 border:none;
 border-radius:8px;
 background:#2563eb;
 color:white;
+margin-left:5px;
 }
-</style>
-</head>
-
-<body>
-
-<h1>💬 CodeChat</h1>
-
-<div id="messages"></div>
-
-<input id="msg" placeholder="Type a message...">
-<button onclick="sendMessage()">Send</button>
-
-<script type="module">
+</style></head><body><div class="topbar">
+<h2>💬 CodeChat</h2><div>
+<button onclick="location.href='profile.html'">
+👤 Profile
+</button><button onclick="location.href='settings.html'">
+⚙️ Settings
+</button>
+</div>
+</div><div id="messages"></div><input id="msg" placeholder="Type a message...">
+<button onclick="sendMessage()">Send</button><script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 
@@ -68,8 +66,7 @@ getFirestore,
 collection,
 addDoc,
 onSnapshot,
-query,
-orderBy
+query
 }
 from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
@@ -119,7 +116,5 @@ document.getElementById("messages").innerHTML = html;
 
 });
 
-</script>
-
-</body>
+</script></body>
 </html>
