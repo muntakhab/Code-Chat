@@ -1,5 +1,17 @@
 <!DOCTYPE html><html>
-<body style="background:red;color:white">
-<h1>PROFILE TEST 123</h1>
-</body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile</title>
+</head>
+<body style="background:#0f172a;color:white;font-family:Arial;text-align:center;padding:20px;"><h1>👤 My Profile</h1><h3 id="email">Loading Email...</h3>
+<h3 id="uid">Loading UID...</h3><button onclick="location.href='chat.html'">
+Back To Chat
+</button><script>
+document.getElementById("email").innerHTML =
+"📧 " + (localStorage.getItem("email") || "Not Found");
+
+document.getElementById("uid").innerHTML =
+"🆔 " + (localStorage.getItem("uid") || "Not Found");
+</script></body>
 </html>
