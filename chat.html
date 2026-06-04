@@ -1,0 +1,85 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodeChat</title><style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI,sans-serif;
+}
+
+body{
+background:#0f172a;
+height:100vh;
+display:flex;
+flex-direction:column;
+color:white;
+}
+
+.header{
+background:#111827;
+padding:15px;
+font-size:22px;
+font-weight:bold;
+text-align:center;
+border-bottom:1px solid #334155;
+}
+
+.messages{
+flex:1;
+padding:15px;
+overflow-y:auto;
+}
+
+.message{
+max-width:75%;
+padding:12px;
+margin:8px 0;
+border-radius:15px;
+}
+
+.sent{
+background:#2563eb;
+margin-left:auto;
+}
+
+.received{
+background:#1e293b;
+}
+
+.input-area{
+display:flex;
+padding:10px;
+background:#111827;
+}
+
+.input-area input{
+flex:1;
+padding:12px;
+border:none;
+border-radius:10px;
+outline:none;
+}
+
+.input-area button{
+margin-left:10px;
+padding:12px 18px;
+border:none;
+border-radius:10px;
+background:#2563eb;
+color:white;
+font-weight:bold;
+}
+</style></head><body><div class="header">
+💬 CodeChat
+</div><div class="messages"><div class="message received">
+Hello 👋
+</div><div class="message sent">
+Hi! Welcome to CodeChat.
+</div></div><div class="input-area">
+<input type="text" placeholder="Type a message...">
+<button>Send</button>
+</div></body>
+</html>
