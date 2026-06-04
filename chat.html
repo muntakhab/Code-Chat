@@ -71,15 +71,32 @@ border-radius:10px;
 background:#2563eb;
 color:white;
 font-weight:bold;
+cursor:pointer;
 }
 </style></head><body><div class="header">
 💬 CodeChat
-</div><div class="messages"><div class="message received">
+</div><div class="messages" id="messages"><div class="message received">
 Hello 👋
-</div><div class="input-area">
-<input type="text" placeholder="Type a message...">
-<button>Send</button>
-</div>
+</div></div><div class="input-area">
+<input id="msg" type="text" placeholder="Type a message...">
+<button onclick="sendMessage()">Send</button>
+</div><script>
+function sendMessage(){
 
-</body>
+let text = document.getElementById("msg").value;
+
+if(text.trim() === "") return;
+
+let div = document.createElement("div");
+
+div.className = "message sent";
+
+div.innerText = text;
+
+document.getElementById("messages").appendChild(div);
+
+document.getElementById("msg").value = "";
+
+}
+</script></body>
 </html>
