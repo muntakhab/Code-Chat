@@ -1,19 +1,125 @@
+<!DOCTYPE html>
+<html>
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CodeChat</title>
-</head>
-<body style="background:#0f172a;color:white;font-family:sans-serif;"><h1>💬 CodeChat</h1><div id="messages">
-<p>Hello 👋</p>
-</div><input id="msg" placeholder="Type a message">
-<button onclick="sendMessage()">Send</button><script>
-function sendMessage() {
-  let text = document.getElementById("msg").value;
 
-  if(text=="") return;
-
-  document.getElementById("messages").innerHTML +=
-  "<p>" + text + "</p>";
-
-  document.getElementById("msg").value = "";
+<style>
+body{
+background:#0f172a;
+color:white;
+font-family:Arial,sans-serif;
+padding:20px;
 }
-</script></body>
+
+h1{
+text-align:center;
+}
+
+#messages{
+height:400px;
+overflow-y:auto;
+border:1px solid #333;
+padding:10px;
+margin-bottom:10px;
+border-radius:10px;
+}
+
+.message{
+background:#2563eb;
+padding:10px;
+margin:5px 0;
+border-radius:10px;
+}
+
+input{
+width:75%;
+padding:10px;
+border:none;
+border-radius:8px;
+}
+
+button{
+padding:10px 20px;
+border:none;
+border-radius:8px;
+background:#2563eb;
+color:white;
+}
+</style>
+</head>
+
+<body>
+
+<h1>💬 CodeChat</h1>
+
+<div id="messages"></div>
+
+<input id="msg" placeholder="Type a message...">
+<button onclick="sendMessage()">Send</button>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+addDoc,
+onSnapshot,
+query,
+orderBy
+}
+from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDgOaEVjw-L7O83Wj-N7j_XQYO8RuX4sQU",
+  authDomain: "code-chat-a82d0.firebaseapp.com",
+  projectId: "code-chat-a82d0",
+  storageBucket: "code-chat-a82d0.firebasestorage.app",
+  messagingSenderId: "863595576976",
+  appId: "1:863595576976:web:61217f6961e3e3a5016215"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.sendMessage = async function(){
+
+let text = document.getElementById("msg").value;
+
+if(text.trim()=="") return;
+
+await addDoc(collection(db,"messages"),{
+text:text,
+time:Date.now()
+});
+
+document.getElementById("msg").value="";
+}
+
+const q = query(collection(db,"messages"));
+
+onSnapshot(q,(snapshot)=>{
+
+let html="";
+
+snapshot.forEach((doc)=>{
+
+html += `
+<div class="message">
+${doc.data().text}
+</div>
+`;
+
+});
+
+document.getElementById("messages").innerHTML = html;
+
+});
+
+</script>
+
+</body>
 </html>
