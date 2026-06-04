@@ -1,22 +1,15 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html>
 <head>
 <title>CodeChat Login</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body>
-
-<h1>Login</h1>
-
-<input id="email" type="email" placeholder="Email"><br><br>
+<body><h1>Login</h1><input id="email" type="email" placeholder="Email"><br><br>
 
 <input id="password" type="password" placeholder="Password"><br><br>
 
 <button onclick="login()">Login</button>
 
-<p id="result"></p>
-
-<script type="module">
+<p id="result"></p><script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 
@@ -27,45 +20,59 @@ signInWithEmailAndPassword
 from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDgOaEVjw-L7O83Wj-N7j_XQYO8RuX4sQU",
-  authDomain: "code-chat-a82d0.firebaseapp.com",
-  projectId: "code-chat-a82d0",
-  storageBucket: "code-chat-a82d0.firebasestorage.app",
-  messagingSenderId: "863595576976",
-  appId: "1:863595576976:web:61217f6961e3e3a5016215"
+apiKey: "AIzaSyDgOaEVjw-L7O83Wj-N7j_XQYO8RuX4sQU",
+authDomain: "code-chat-a82d0.firebaseapp.com",
+projectId: "code-chat-a82d0",
+storageBucket: "code-chat-a82d0.firebasestorage.app",
+messagingSenderId: "863595576976",
+appId: "1:863595576976:web:61217f6961e3e3a5016215"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-window.login = function(){
-alert("Login button clicked");
-const email = document.getElementById("email").value;
-const password = document.getElementById("password").value;
+window.login = async function(){
 
-signInWithEmailAndPassword(auth,email,password)
+const email =
+document.getElementById("email").value;
 
-.then(() => {
+const password =
+document.getElementById("password").value;
+
+try{
+
+const userCredential =
+await signInWithEmailAndPassword(
+auth,
+email,
+password
+);
+
+localStorage.setItem(
+"uid",
+userCredential.user.uid
+);
+
+localStorage.setItem(
+"email",
+userCredential.user.email
+);
 
 document.getElementById("result").innerHTML =
 "Login Successful";
 
-setTimeout(() => {
-window.location.href = "chat.html";
-}, 1000);
+setTimeout(()=>{
+window.location.href="chat.html";
+},1000);
 
-})
-
-.catch((error) => {
+}catch(error){
 
 document.getElementById("result").innerHTML =
 error.message;
 
-});
+}
 
 }
 
-</script>
-
-</body>
+</script></body>
 </html>
