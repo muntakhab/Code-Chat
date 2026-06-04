@@ -79,6 +79,7 @@ color:white;
 }
 </style></head><body><div class="header">
 <div class="logo">💬 CodeChat</div><div class="menu">
+<button onclick="location.href='search.html'">🔍</button>
 <button onclick="location.href='profile.html'">👤</button>
 <button onclick="location.href='settings.html'">⚙️</button>
 </div>
@@ -93,18 +94,17 @@ import {
 getFirestore,
 collection,
 addDoc,
-onSnapshot,
-query
+onSnapshot
 }
 from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
-apiKey: "AIzaSyDgOaEVjw-L7O83Wj-N7j_XQYO8RuX4sQU",
-authDomain: "code-chat-a82d0.firebaseapp.com",
-projectId: "code-chat-a82d0",
-storageBucket: "code-chat-a82d0.firebasestorage.app",
-messagingSenderId: "863595576976",
-appId: "1:863595576976:web:61217f6961e3e3a5016215"
+apiKey:"AIzaSyDgOaEVjw-L7O83Wj-N7j_XQYO8RuX4sQU",
+authDomain:"code-chat-a82d0.firebaseapp.com",
+projectId:"code-chat-a82d0",
+storageBucket:"code-chat-a82d0.firebasestorage.app",
+messagingSenderId:"863595576976",
+appId:"1:863595576976:web:61217f6961e3e3a5016215"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -124,9 +124,7 @@ time:Date.now()
 document.getElementById("msg").value="";
 }
 
-const q = query(collection(db,"messages"));
-
-onSnapshot(q,(snapshot)=>{
+onSnapshot(collection(db,"messages"),(snapshot)=>{
 
 let html="";
 
@@ -134,3 +132,15 @@ snapshot.forEach((doc)=>{
 
 html += `
 <div class="message">
+${doc.data().text}
+</div>
+`;
+
+});
+
+document.getElementById("messages").innerHTML = html;
+
+});
+
+</script></body>
+</html>
