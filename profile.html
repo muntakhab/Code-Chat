@@ -24,8 +24,9 @@ body { background: var(--bg-black); color: var(--text-pure); min-height: 100vh; 
 .profile-header h2 { font-size: 20px; font-weight: 700; }
 
 .account-overview { display: flex; align-items: center; gap: 25px; margin-bottom: 20px; }
-.avatar-container { position: relative; width: 86px; height: 86px; }
+.avatar-container { position: relative; width: 86px; height: 86px; cursor: pointer; }
 .avatar-large { width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, #4f46e5, #06b6d4); display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; color: white; object-fit: cover; border: 2px solid var(--border-gray); }
+.avatar-overlay { position: absolute; bottom: 0; right: 0; background: var(--ig-blue); border: 2px solid black; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; }
 
 .stats-counter-grid { flex: 1; display: flex; justify-content: space-around; text-align: center; }
 .stat-box data { font-size: 18px; font-weight: 700; color: white; display: block; }
@@ -37,7 +38,7 @@ body { background: var(--bg-black); color: var(--text-pure); min-height: 100vh; 
 .bio-text { font-size: 14px; color: #dbdbdb; line-height: 1.4; white-space: pre-line; }
 
 .bio-edit-container { display: none; margin-top: 10px; flex-direction: column; gap: 10px; }
-.bio-edit-container textarea, .bio-edit-container input { background: var(--surface-dark); border: 1px solid var(--border-gray); border-radius: 8px; padding: 10px; color: white; font-size: 14px; outline: none; }
+.bio-edit-container textarea { background: var(--surface-dark); border: 1px solid var(--border-gray); border-radius: 8px; padding: 10px; color: white; font-size: 14px; outline: none; resize: none; }
 
 .action-buttons-group { display: flex; flex-direction: column; gap: 10px; }
 .btn-primary { width: 100%; padding: 11px; border: none; border-radius: 10px; background: var(--ig-blue); color: white; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
@@ -55,9 +56,16 @@ body { background: var(--bg-black); color: var(--text-pure); min-height: 100vh; 
     </header>
 
     <section class="account-overview">
-        <div class="avatar-container" id="avatarHolder">
-            <div class="avatar-large" id="profileAvatar">U</div>
+        <div class="avatar-container" onclick="triggerProfilePicUpload()">
+            <div id="avatarHolder">
+                <div class="avatar-large" id="profileAvatar">U</div>
+            </div>
+            <div class="avatar-overlay">
+                <i data-lucide="camera" style="width:14px; color:white;"></i>
+            </div>
         </div>
+        <input type="file" id="profileFileInput" accept="image/*" style="display: none;" onchange="uploadProfilePic(event)">
+
         <div class="stats-counter-grid">
             <div class="stat-box"><data id="countPosts">12</data><span>Posts</span></div>
             <div class="stat-box"><data id="countFollowers">1.4K</data><span>Followers</span></div>
@@ -71,7 +79,6 @@ body { background: var(--bg-black); color: var(--text-pure); min-height: 100vh; 
         <p class="bio-text" id="displayBio">Click 'Edit Profile' to customize your bio! ✨</p>
         
         <div class="bio-edit-container" id="bioEditBox">
-            <input id="avatarUrlInput" placeholder="Paste Image URL (e.g. https://.../pic.jpg)">
             <textarea id="bioInput" rows="3" placeholder="Write something cool about yourself..."></textarea>
             <button class="btn-primary btn-save" onclick="saveProfileData()">Save Profile</button>
         </div>
@@ -94,6 +101,7 @@ let currentSavedAvatar = localStorage.getItem("userAvatar") || "";
 document.getElementById("displayEmail").innerHTML = `📧 ${userEmail}`;
 document.getElementById("displayUsername").innerText = calculatedUsername;
 document.getElementById("topNavUsername").innerText = calculatedUsername.toLowerCase();
+document.getElementById("displayBio").innerText = currentSavedBio;
 
 function renderAvatar() {
     const avatarHolder = document.getElementById("avatarHolder");
@@ -110,14 +118,30 @@ window.resetAvatarImg = function() {
     renderAvatar();
 };
 
+// Functions for File & Camera Handling
+window.triggerProfilePicUpload = function() {
+    document.getElementById("profileFileInput").click();
+};
+
+window.uploadProfilePic = function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            currentSavedAvatar = e.target.result;
+            localStorage.setItem("userAvatar", currentSavedAvatar); // Saves photo raw data
+            renderAvatar();
+        };
+        reader.readAsDataURL(file);
+    }
+};
+
 renderAvatar();
-document.getElementById("displayBio").innerText = currentSavedBio;
 
 window.toggleBioEditor = function() {
     const editBox = document.getElementById("bioEditBox");
     const bioText = document.getElementById("displayBio");
     const inputField = document.getElementById("bioInput");
-    const avatarField = document.getElementById("avatarUrlInput");
 
     if (editBox.style.display === "flex") {
         editBox.style.display = "none";
@@ -126,24 +150,17 @@ window.toggleBioEditor = function() {
         editBox.style.display = "flex";
         bioText.style.display = "none";
         inputField.value = currentSavedBio;
-        avatarField.value = currentSavedAvatar;
         inputField.focus();
     }
 };
 
 window.saveProfileData = function() {
     const newBio = document.getElementById("bioInput").value.trim();
-    const newAvatar = document.getElementById("avatarUrlInput").value.trim();
-    
     if (newBio !== "") {
         currentSavedBio = newBio;
         localStorage.setItem("userBio", newBio);
         document.getElementById("displayBio").innerText = newBio;
     }
-    
-    currentSavedAvatar = newAvatar;
-    localStorage.setItem("userAvatar", newAvatar);
-    renderAvatar();
     toggleBioEditor();
 };
 </script>
