@@ -3,74 +3,88 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Messages</title>
+<title>Messages & Stories</title>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background: #000000; color: #ffffff; min-height: 100vh; display: flex; justify-content: center; }
     .dm-container { width: 100%; max-width: 600px; background: #000000; display: flex; flex-direction: column; height: 100vh; border-left: 1px solid #262626; border-right: 1px solid #262626; }
     
-    /* Instagram DM Header */
+    /* Header */
     .dm-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: #000000; }
     .header-user { display: flex; align-items: center; gap: 6px; cursor: pointer; }
     .header-user h2 { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
     .header-icons { display: flex; align-items: center; gap: 20px; }
     
+    /* Instagram Stories Tray */
+    .stories-tray { display: flex; gap: 14px; padding: 10px 16px; overflow-x: auto; border-bottom: 1px solid #1c1c1c; scrollbar-width: none; }
+    .stories-tray::-webkit-scrollbar { display: none; }
+    .story-wrapper { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; color: #a8a8a8; cursor: pointer; min-width: 65px; }
+    .story-ring { padding: 2px; border-radius: 50%; background: #262626; display: flex; align-items: center; justify-content: center; }
+    .story-avatar { width: 56px; height: 56px; border-radius: 50%; background: #262626; border: 2px solid #000000; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #ffffff; font-size: 18px; overflow: hidden; }
+    .story-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
     /* Search Bar */
     .search-wrapper { position: relative; padding: 10px 16px; }
     .search-wrapper input { width: 100%; background: #262626; border: none; border-radius: 12px; padding: 10px 12px 10px 42px; color: #ffffff; font-size: 15px; outline: none; }
-    .search-wrapper input::placeholder { color: #8e8e8e; }
     .search-wrapper i { position: absolute; left: 28px; top: 50%; transform: translateY(-50%); color: #8e8e8e; width: 16px; }
     
-    /* Tabs */
-    .dm-tabs { display: flex; gap: 10px; padding: 6px 16px 12px 16px; font-size: 14px; font-weight: 600; }
-    .tab-item { background: #1c1c1c; padding: 6px 14px; border-radius: 18px; color: #ffffff; font-size: 13px; cursor: pointer; }
-    .tab-active { background: #ffffff; color: #000000; }
-
     /* Chat List */
     #users { display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding-top: 8px; }
-    .chat-item { display: flex; flex-direction: column; padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #121212; transition: background 0.1s; }
-    .chat-item:hover { background: #121212; }
-    
+    .chat-item { display: flex; flex-direction: column; padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #121212; }
     .chat-top-row { display: flex; align-items: center; width: 100%; }
-    .avatar-ring { padding: 2px; border-radius: 50%; background: linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7); margin-right: 14px; display: flex; align-items: center; justify-content: center; }
-    .avatar-main { width: 48px; height: 48px; border-radius: 50%; background: #262626; border: 2px solid #000000; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #ffffff; font-size: 16px; }
-    
+    .chat-avatar-list { width: 44px; height: 44px; border-radius: 50%; background: #262626; display: flex; align-items: center; justify-content: center; font-weight: 700; margin-right: 14px; overflow: hidden; }
+    .chat-avatar-list img { width: 100%; height: 100%; object-fit: cover; }
     .chat-details { flex: 1; display: flex; flex-direction: column; gap: 2px; }
-    .chat-details h3 { font-size: 14px; font-weight: 600; color: #ffffff; }
-    .user-bio { font-size: 13px; color: #8e8e8e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 280px; }
-    
-    .card-stats { display: flex; gap: 12px; font-size: 11px; color: #a8a8a8; margin-top: 4px; padding-left: 64px; }
+    .chat-details h3 { font-size: 14px; font-weight: 600; }
+    .user-bio { font-size: 13px; color: #8e8e8e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px; }
+    .card-stats { display: flex; gap: 12px; font-size: 11px; color: #a8a8a8; margin-top: 4px; padding-left: 58px; }
     .card-stats span { font-weight: 600; color: #ffffff; }
-    .online-dot { width: 8px; height: 8px; background: #00f020; border-radius: 50%; margin-left: auto; }
+
+    /* Fullscreen Story Modal Popup */
+    .story-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 999; flex-direction: column; justify-content: center; align-items: center; }
+    .story-bar { position: absolute; top: 15px; left: 5%; width: 90%; height: 3px; background: #333; border-radius: 2px; overflow: hidden; }
+    .story-progress { width: 0%; height: 100%; background: #fff; }
+    .story-img-view { width: 100%; max-height: 80vh; object-fit: contain; }
+    .story-close { position: absolute; top: 25px; right: 20px; color: white; cursor: pointer; font-weight: bold; font-size: 20px; z-index: 1000; }
 </style>
 </head>
 <body>
 
 <div class="dm-container">
     <header class="dm-header">
-        <div class="header-user">
+        <div class="header-user" onclick="location.href='profile.html'">
             <h2 id="currentProfileName">codechat_user</h2>
             <i data-lucide="chevron-down" style="width: 16px; color: white;"></i>
         </div>
         <div class="header-icons">
-            <i data-lucide="list" style="width: 24px; cursor: pointer;"></i>
+            <i data-lucide="plus-circle" onclick="triggerStoryUpload()" style="width: 24px; cursor: pointer; color: #0095f6;"></i>
             <i data-lucide="square-pen" style="width: 24px; cursor: pointer;"></i>
         </div>
     </header>
+
+    <input type="file" id="storyFileInput" accept="image/*" style="display: none;" onchange="uploadStoryFile(event)">
+
+    <div class="stories-tray">
+        <div class="story-wrapper my-story" id="myStoryBtn" onclick="triggerStoryUpload()">
+            <div class="story-ring" id="myStoryRing"><div class="story-avatar" id="myStoryIcon">+</div></div>
+            <span>Your story</span>
+        </div>
+        <div id="otherStories" style="display: flex; gap: 14px;"></div>
+    </div>
 
     <div class="search-wrapper">
         <i data-lucide="search"></i>
         <input id="search" placeholder="Search" oninput="searchFilterEngine()">
     </div>
 
-    <div class="dm-tabs">
-        <div class="tab-item tab-active">Primary</div>
-        <div class="tab-item">General</div>
-        <div class="tab-item">Requests</div>
-    </div>
-
     <div id="users"></div>
+</div>
+
+<div class="story-modal" id="storyModal">
+    <div class="story-bar"><div class="story-progress" id="storyProgress"></div></div>
+    <span class="story-close" onclick="closeStory()">✕</span>
+    <img src="" class="story-img-view" id="storyImgView">
 </div>
 
 <script type="module">
@@ -89,6 +103,65 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+const myEmail = localStorage.getItem("email") || "user@codechat.com";
+const myUsername = myEmail.split("@")[0];
+document.getElementById("currentProfileName").innerText = myUsername.toLowerCase();
+
+// Load Profile Pic into Story Placeholder
+const myAvatar = localStorage.getItem("userAvatar") || "";
+if(myAvatar) { 
+    document.getElementById("myStoryIcon").innerHTML = `<img src="${myAvatar}">`; 
+}
+
+// Gallery / Camera Story Upload Logic
+window.triggerStoryUpload = function() { document.getElementById("storyFileInput").click(); };
+window.uploadStoryFile = function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            localStorage.setItem("myLiveStory", e.target.result);
+            alert("Story Uploaded Successfully! Tap 'Your Story' to view.");
+            location.reload();
+        };
+        reader.readAsDataURL(file);
+    }
+};
+
+// Fullscreen Story View & Smooth Progress bar
+let storyInterval;
+window.viewMyStory = function() {
+    const storyData = localStorage.getItem("myLiveStory");
+    if(!storyData) return;
+    
+    document.getElementById("storyImgView").src = storyData;
+    document.getElementById("storyModal").style.display = "flex";
+    
+    let progress = document.getElementById("storyProgress");
+    let width = 0;
+    progress.style.width = "0%";
+    
+    storyInterval = setInterval(() => {
+        if (width >= 100) {
+            closeStory();
+        } else {
+            width += 1;
+            progress.style.width = width + "%";
+        }
+    }, 50); // 50ms * 100 = 5 Seconds Story Duration
+};
+
+window.closeStory = function() {
+    document.getElementById("storyModal").style.display = "none";
+    clearInterval(storyInterval);
+};
+
+// If story exists, make ring colorful and add click action
+if(localStorage.getItem("myLiveStory")) {
+    document.getElementById("myStoryRing").style.background = "linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7)";
+    document.getElementById("myStoryBtn").onclick = function() { viewMyStory(); };
+}
+
 async function fetchUsers() {
     try {
         const snapshot = await getDocs(collection(db, "users"));
@@ -96,23 +169,25 @@ async function fetchUsers() {
         snapshot.forEach((doc) => {
             const data = doc.data();
             const uName = data.username || "Unknown User";
+            if(uName.toLowerCase() === myUsername.toLowerCase()) return;
+            
             const uUID = data.uid || "";
             const bio = data.bio || "Hey there! I am using CodeChat. 🚀";
             const followers = data.followersCount || "1.2K";
             const following = data.followingCount || "340";
+            const userPic = data.userAvatar || "";
             const initial = uName.charAt(0).toUpperCase();
+
+            const avatarHtml = userPic ? `<div class="chat-avatar-list"><img src="${userPic}"></div>` : `<div class="chat-avatar-list">${initial}</div>`;
 
             html += `
             <div class="chat-item" onclick="location.href='privatechat.html?user=${uName}&uid=${uUID}'">
                 <div class="chat-top-row">
-                    <div class="avatar-ring">
-                        <div class="avatar-main">${initial}</div>
-                    </div>
+                    ${avatarHtml}
                     <div class="chat-details">
                         <h3>${uName.toLowerCase()}</h3>
                         <div class="user-bio">${bio}</div>
                     </div>
-                    <div class="online-dot"></div>
                 </div>
                 <div class="card-stats">
                     <div><span>${followers}</span> followers</div>
@@ -121,10 +196,7 @@ async function fetchUsers() {
             </div>`;
         });
         document.getElementById("users").innerHTML = html || "<p style='text-align:center; padding: 30px; color:#8e8e8e;'>No users found.</p>";
-        lucide.createIcons();
-    } catch (error) {
-        console.error("Firestore loading error: ", error);
-    }
+    } catch (error) { console.error(error); }
 }
 
 window.searchFilterEngine = function() {
@@ -132,8 +204,7 @@ window.searchFilterEngine = function() {
     document.querySelectorAll(".chat-item").forEach(item => {
         const nameElement = item.querySelector("h3");
         if(nameElement) {
-            const name = nameElement.innerText;
-            item.style.display = name.toUpperCase().includes(query) ? "flex" : "none";
+            item.style.display = nameElement.innerText.toUpperCase().includes(query) ? "flex" : "none";
         }
     });
 };
