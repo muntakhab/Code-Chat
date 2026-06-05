@@ -3,36 +3,73 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Search Users</title>
+<title>Messages</title>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
-    body { background: #000000; color: #f5f5f5; font-family: -apple-system, sans-serif; min-height: 100vh; display: flex; justify-content: center; padding: 20px 10px; }
-    .search-container { width: 100%; max-width: 500px; }
-    .header-area { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
-    .back-btn { background: transparent; border: none; color: white; cursor: pointer; }
-    .search-wrapper { position: relative; margin-bottom: 25px; }
-    .search-wrapper input { width: 100%; background: #262626; border: none; border-radius: 10px; padding: 12px 12px 12px 42px; color: white; font-size: 15px; outline: none; }
-    .search-wrapper i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #a8a8a8; width: 18px; }
-    #users { display: flex; flex-direction: column; gap: 14px; }
-    .user-card { background: #121212; border: 1px solid #262626; border-radius: 14px; padding: 16px; cursor: pointer; transition: 0.2s; }
-    .user-card:hover { background: #181818; }
-    .card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-    .avatar-placeholder { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; }
-    .user-bio { font-size: 13px; color: #dbdbdb; margin-bottom: 12px; text-align: left; }
-    .card-stats { display: flex; gap: 20px; border-top: 1px solid #1e1e1e; padding-top: 10px; font-size: 12px; color: #a8a8a8; }
-    .card-stats span { font-weight: 700; color: white; margin-right: 3px; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: #000000; color: #ffffff; min-height: 100vh; display: flex; justify-content: center; }
+    .dm-container { width: 100%; max-width: 600px; background: #000000; display: flex; flex-direction: column; height: 100vh; border-left: 1px solid #262626; border-right: 1px solid #262626; }
+    
+    /* Instagram DM Header */
+    .dm-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: #000000; }
+    .header-user { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+    .header-user h2 { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+    .header-icons { display: flex; align-items: center; gap: 20px; }
+    
+    /* Search Bar */
+    .search-wrapper { position: relative; padding: 10px 16px; }
+    .search-wrapper input { width: 100%; background: #262626; border: none; border-radius: 12px; padding: 10px 12px 10px 42px; color: #ffffff; font-size: 15px; outline: none; }
+    .search-wrapper input::placeholder { color: #8e8e8e; }
+    .search-wrapper i { position: absolute; left: 28px; top: 50%; transform: translateY(-50%); color: #8e8e8e; width: 16px; }
+    
+    /* Tabs */
+    .dm-tabs { display: flex; gap: 10px; padding: 6px 16px 12px 16px; font-size: 14px; font-weight: 600; }
+    .tab-item { background: #1c1c1c; padding: 6px 14px; border-radius: 18px; color: #ffffff; font-size: 13px; cursor: pointer; }
+    .tab-active { background: #ffffff; color: #000000; }
+
+    /* Chat List */
+    #users { display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding-top: 8px; }
+    .chat-item { display: flex; flex-direction: column; padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #121212; transition: background 0.1s; }
+    .chat-item:hover { background: #121212; }
+    
+    .chat-top-row { display: flex; align-items: center; width: 100%; }
+    .avatar-ring { padding: 2px; border-radius: 50%; background: linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7); margin-right: 14px; display: flex; align-items: center; justify-content: center; }
+    .avatar-main { width: 48px; height: 48px; border-radius: 50%; background: #262626; border: 2px solid #000000; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #ffffff; font-size: 16px; }
+    
+    .chat-details { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+    .chat-details h3 { font-size: 14px; font-weight: 600; color: #ffffff; }
+    .user-bio { font-size: 13px; color: #8e8e8e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 280px; }
+    
+    .card-stats { display: flex; gap: 12px; font-size: 11px; color: #a8a8a8; margin-top: 4px; padding-left: 64px; }
+    .card-stats span { font-weight: 600; color: #ffffff; }
+    .online-dot { width: 8px; height: 8px; background: #00f020; border-radius: 50%; margin-left: auto; }
 </style>
 </head>
 <body>
-<div class="search-container">
-    <div class="header-area">
-        <button class="back-btn" onclick="location.href='index.html'"><i data-lucide="arrow-left"></i></button>
-        <h2>Explore Users</h2>
-    </div>
+
+<div class="dm-container">
+    <header class="dm-header">
+        <div class="header-user">
+            <h2 id="currentProfileName">codechat_user</h2>
+            <i data-lucide="chevron-down" style="width: 16px; color: white;"></i>
+        </div>
+        <div class="header-icons">
+            <i data-lucide="list" style="width: 24px; cursor: pointer;"></i>
+            <i data-lucide="square-pen" style="width: 24px; cursor: pointer;"></i>
+        </div>
+    </header>
+
     <div class="search-wrapper">
         <i data-lucide="search"></i>
-        <input id="search" placeholder="Search username..." oninput="searchFilterEngine()">
+        <input id="search" placeholder="Search" oninput="searchFilterEngine()">
     </div>
+
+    <div class="dm-tabs">
+        <div class="tab-item tab-active">Primary</div>
+        <div class="tab-item">General</div>
+        <div class="tab-item">Requests</div>
+    </div>
+
     <div id="users"></div>
 </div>
 
@@ -58,8 +95,6 @@ async function fetchUsers() {
         let html = "";
         snapshot.forEach((doc) => {
             const data = doc.data();
-            
-            // Safety Check: Agar kisi user ka username database me na ho toh issue handle karein
             const uName = data.username || "Unknown User";
             const uUID = data.uid || "";
             const bio = data.bio || "Hey there! I am using CodeChat. 🚀";
@@ -68,22 +103,25 @@ async function fetchUsers() {
             const initial = uName.charAt(0).toUpperCase();
 
             html += `
-            <div class="user-card" onclick="location.href='privatechat.html?user=${uName}&uid=${uUID}'">
-                <div class="card-top">
-                    <div class="avatar-placeholder">${initial}</div>
-                    <div>
-                        <h3 style="font-size:15px; font-weight:600;">${uName}</h3>
-                        <p style="font-size:12px; color:#a8a8a8;">@${uName.toLowerCase()}</p>
+            <div class="chat-item" onclick="location.href='privatechat.html?user=${uName}&uid=${uUID}'">
+                <div class="chat-top-row">
+                    <div class="avatar-ring">
+                        <div class="avatar-main">${initial}</div>
                     </div>
+                    <div class="chat-details">
+                        <h3>${uName.toLowerCase()}</h3>
+                        <div class="user-bio">${bio}</div>
+                    </div>
+                    <div class="online-dot"></div>
                 </div>
-                <div class="user-bio">${bio}</div>
                 <div class="card-stats">
-                    <div><span>${followers}</span>followers</div>
-                    <div><span>${following}</span>following</div>
+                    <div><span>${followers}</span> followers</div>
+                    <div><span>${following}</span> following</div>
                 </div>
             </div>`;
         });
-        document.getElementById("users").innerHTML = html || "<p style='text-align:center; color:#a8a8a8;'>No users found in database.</p>";
+        document.getElementById("users").innerHTML = html || "<p style='text-align:center; padding: 30px; color:#8e8e8e;'>No users found.</p>";
+        lucide.createIcons();
     } catch (error) {
         console.error("Firestore loading error: ", error);
     }
@@ -91,11 +129,11 @@ async function fetchUsers() {
 
 window.searchFilterEngine = function() {
     const query = document.getElementById("search").value.toUpperCase();
-    document.querySelectorAll(".user-card").forEach(card => {
-        const nameElement = card.querySelector("h3");
+    document.querySelectorAll(".chat-item").forEach(item => {
+        const nameElement = item.querySelector("h3");
         if(nameElement) {
             const name = nameElement.innerText;
-            card.style.display = name.toUpperCase().includes(query) ? "block" : "none";
+            item.style.display = name.toUpperCase().includes(query) ? "flex" : "none";
         }
     });
 };
