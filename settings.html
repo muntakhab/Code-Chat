@@ -1,49 +1,54 @@
-<!DOCTYPE html><html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Settings - CodeChat</title><style>
-body{
-background:#0f172a;
-color:white;
-font-family:Arial,sans-serif;
-padding:20px;
+const receiverName = params.get("user");
+const receiverUid = params.get("uid");
+
+const myUid = localStorage.getItem("uid");
+
+document.getElementById("user").innerHTML =
+"💬 " + receiverName;
+
+window.sendMessage = async function(){
+
+const text = document.getElementById("msg").value;
+
+if(text.trim()=="") return;
+
+await addDoc(collection(db,"privateMessages"),{
+sender: myUid,
+receiver: receiverUid,
+text: text,
+time: Date.now()
+});
+
+document.getElementById("msg").value="";
 }
 
-h1{
-text-align:center;
-margin-bottom:20px;
-}
+const q = query(
+collection(db,"privateMessages"),
+orderBy("time")
+);
 
-.card{
-background:#1e293b;
-padding:15px;
-margin:12px 0;
-border-radius:12px;
-font-size:18px;
-cursor:pointer;
-}
+onSnapshot(q,(snapshot)=>{
 
-button{
-width:100%;
-padding:14px;
-border:none;
-border-radius:12px;
-background:#2563eb;
-color:white;
-font-size:16px;
-margin-top:15px;
-}
-</style></head><body><h1>⚙️ Settings</h1><div class="card">👤 Edit Profile</div><div class="card">🌙 Dark Mode</div><div class="card">🔔 Notifications</div><div class="card">🌐 Language</div><div class="card">🔒 Privacy</div><div class="card">ℹ️ About CodeChat</div><button onclick="location.href='profile.html'">
-👤 My Profile
-</button><button onclick="location.href='chat.html'">
-💬 Back To Chat
-</button><button onclick="logout()">
-🚪 Logout
-</button><script>
-function logout(){
-alert("Logged Out");
-window.location.href="login.html";
-}
-</script></body>
-</html>
+let html="";
+
+snapshot.forEach((doc)=>{
+
+const data = doc.data();
+
+if(
+(data.sender === myUid && data.receiver === receiverUid) ||
+(data.sender === receiverUid && data.receiver === myUid)
+){
+
+html += `
+
+<div class="message">
+${data.text}
+</div>
+`;}
+
+});
+
+document.getElementById("messages").innerHTML = html;
+
+});
