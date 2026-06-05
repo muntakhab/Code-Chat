@@ -1,1 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create New Post</title>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: #000000; color: #ffffff; min-height: 100vh; display: flex; justify-content: center; padding-bottom: 65px; }
+    .upload-container { width: 100%; max-width: 500px; background: #000; min-height: 100vh; border-left: 1px solid #262626; border-right: 1px solid #262626; display: flex; flex-direction: column; }
+    
+    .upload-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid #262626; }
+    .upload-header h2 { font-size: 18px; font-weight: 700; }
+    .share-btn { background: transparent; border: none; color: #0095f6; font-weight: 600; font-size: 15px; cursor: pointer; }
+
+    .select-box { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; gap: 15px; cursor: pointer; background: #0a0a0a; border-bottom: 1px solid #262626; }
+    .preview-img { width: 100%; max-height: 400px; object-fit: contain; display: none; }
+
+    .caption-box { padding: 16px; background: #000; }
+    .caption-box textarea { width: 100%; background: transparent; border: none; color: #fff; font-size: 15px; outline: none; resize: none; }
+
+    .instagram-navbar { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #000; border-top: 1px solid #262626; display: flex; justify-content: space-around; align-items: center; padding: 12px 0; z-index: 500; }
+    .nav-icon { color: #ffffff; cursor: pointer; text-decoration: none; }
+    .nav-icon.active { color: #0095f6; }
+</style>
+</head>
+<body>
+
+<div class="upload-container">
+    <header class="upload-header">
+        <span style="cursor:pointer;" onclick="location.href='feed.html'">Cancel</span>
+        <h2>New Post</h2>
+        <button class="share-btn" onclick="sharePost()">Share</button>
+    </header>
+
+    <div class="select-box" id="selectBox" onclick="triggerFileSelect()">
+        <i data-lucide="image" style="width: 48px; height: 48px; color: #8e8e8e;"></i>
+        <p style="color: #8e8e8e;">Select from Gallery or Camera</p>
+        <img class="preview-img" id="postPreview">
+    </div>
+    <input type="file" id="postFileInput" accept="image/*" style="display: none;" onchange="loadPreview(event)">
+
+    <div class="caption-box">
+        <textarea id="captionInput" rows="4" placeholder="Write a caption..."></textarea>
+    </div>
+
+    <nav class="instagram-navbar">
+        <a href="feed.html" class="nav-icon"><i data-lucide="home"></i></a>
+        <a href="search.html" class="nav-icon"><i data-lucide="search"></i></a>
+        <a href="upload.html" class="nav-icon active"><i data-lucide="plus-square"></i></a>
+        <a href="reels.html" class="nav-icon"><i data-lucide="clapperboard"></i></a>
+        <a href="profile.html" class="nav-icon"><i data-lucide="user"></i></a>
+    </nav>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDgOaEVjw-L7O83Wj-N7j_XQYO8RuX4sQU",
+    authDomain: "code-chat-a82d0.firebaseapp.com",
+    projectId: "code-chat-a82d0",
+    storageBucket: "code-chat-a82d0.firebasestorage.app",
+    messagingSenderId: "863595576976",
+    appId: "1:863595576976:web:61217f6961e3e3a5016215"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let postImageBase64 = "";
+
+window.triggerFileSelect = function() { document.getElementById("postFileInput").click(); };
+
+window.loadPreview = function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            postImageBase64 = e.target.result;
+            document.getElementById("postPreview").src = postImageBase64;
+            document.getElementById("postPreview").style.display = "block";
+            document.querySelector("#selectBox p").style.display = "none";
+            document.querySelector("#selectBox i").style.display = "none";
+        };
+        reader.readAsDataURL(file);
+    }
+};
+
+window.sharePost = async function() {
+    const caption = document.getElementById("captionInput").value.trim();
+    const myEmail = localStorage.getItem("email") || "user@codechat.com";
+    const myUsername = myEmail.split("@")[0];
+    const myAvatar = localStorage.getItem("userAvatar") || "";
+
+    if(!postImageBase64) { alert("Please select an image first!"); return; }
+
+    try {
+        await addDoc(collection(db, "global_posts"), {
+            username: myUsername,
+            avatar: myAvatar,
+            postImg: postImageBase64,
+            caption: caption,
+            likes: 0,
+            timestamp: new Date().getTime()
+        });
+        alert("Post Shared Successfully! 🚀");
+        location.href = "feed.html";
+    } catch(e) { console.error(e); }
+};
+
+lucide.createIcons();
+</script>
+</body>
+</html>
 
