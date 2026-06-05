@@ -1,46 +1,66 @@
-<!DOCTYPE html><html>
-<head>
+<!DOCTYPE html><html><head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Private Chat</title><style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>CodeChat Private Chat</title><style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
 body{
 background:#0f172a;
 color:white;
 font-family:Arial,sans-serif;
-margin:0;
+height:100vh;
 display:flex;
 flex-direction:column;
-height:100vh;
 }
 
 .header{
 background:#111827;
 padding:15px;
-font-size:20px;
+border-bottom:1px solid #1f2937;
+position:sticky;
+top:0;
+z-index:100;
+}
+
+#user{
+font-size:18px;
 font-weight:bold;
+}
+
+.status{
+font-size:12px;
+margin-top:4px;
+color:#9ca3af;
 }
 
 #messages{
 flex:1;
 overflow-y:auto;
 padding:15px;
+display:flex;
+flex-direction:column;
+gap:10px;
 }
 
 .myMessage{
 background:#2563eb;
 padding:10px;
 border-radius:12px;
-margin-bottom:10px;
 margin-left:auto;
 max-width:75%;
+word-wrap:break-word;
 }
 
 .otherMessage{
 background:#374151;
 padding:10px;
 border-radius:12px;
-margin-bottom:10px;
 max-width:75%;
+word-wrap:break-word;
 }
 
 .time{
@@ -53,6 +73,7 @@ margin-top:5px;
 display:flex;
 padding:10px;
 background:#111827;
+gap:10px;
 }
 
 .input-area input{
@@ -60,25 +81,35 @@ flex:1;
 padding:12px;
 border:none;
 border-radius:10px;
+outline:none;
 }
 
 .input-area button{
-margin-left:10px;
-padding:12px;
+padding:12px 18px;
 border:none;
 border-radius:10px;
 background:#2563eb;
 color:white;
+cursor:pointer;
 }
-</style></head>
-<body><div class="header" id="user">
-Private Chat
-</div><div id="messages"></div><div class="input-area">
-<input id="msg" placeholder="Type message...">
-<button onclick="sendMessage()">Send</button>
-</div><script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+</style></head><body><div class="header"><div id="user">
+Loading...
+</div><div class="status" id="status">
+Checking status...
+</div></div><div id="messages"></div><div class="input-area"><input
+id="msg"
+placeholder="Type message..."
+autocomplete="off"
+
+«»
+
+<button onclick="sendMessage()">
+Send
+</button></div><script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 
 import {
 getFirestore,
@@ -86,47 +117,128 @@ collection,
 addDoc,
 onSnapshot,
 query,
-orderBy
+orderBy,
+doc,
+getDoc
 }
 from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
+
 apiKey:"AIzaSyDgOaEVjw-L7O83Wj-N7j_XQYO8RuX4sQU",
 authDomain:"code-chat-a82d0.firebaseapp.com",
 projectId:"code-chat-a82d0",
 storageBucket:"code-chat-a82d0.firebasestorage.app",
 messagingSenderId:"863595576976",
 appId:"1:863595576976:web:61217f6961e3e3a5016215"
+
 };
 
 const app = initializeApp(firebaseConfig);
+
 const db = getFirestore(app);
 
-const params = new URLSearchParams(window.location.search);
+const params =
+new URLSearchParams(window.location.search);
 
-const receiverName = params.get("user");
-const receiverUid = params.get("uid");
+const receiverName =
+params.get("user");
 
-const myUid = localStorage.getItem("uid");
+const receiverUid =
+params.get("uid");
+
+const myUid =
+localStorage.getItem("uid");
 
 document.getElementById("user").innerHTML =
 "💬 " + receiverName;
+  async function loadStatus(){
+
+try{
+
+const statusDoc =
+await getDoc(
+doc(db,"userStatus",receiverUid)
+);
+
+if(statusDoc.exists()){
+
+const status =
+statusDoc.data();
+
+if(status.online){
+
+document.getElementById("status").innerHTML =
+"🟢 Online";
+
+}else{
+
+const lastSeen =
+new Date(
+status.lastSeen || Date.now()
+).toLocaleString();
+
+document.getElementById("status").innerHTML =
+"⚫ Last Seen: " + lastSeen;
+
+}
+
+}else{
+
+document.getElementById("status").innerHTML =
+"⚫ Offline";
+
+}
+
+}catch(error){
+
+document.getElementById("status").innerHTML =
+"⚫ Offline";
+
+}
+
+}
+
+loadStatus();
 
 window.sendMessage = async function(){
 
-const text = document.getElementById("msg").value;
+const input =
+document.getElementById("msg");
 
-if(text.trim()=="") return;
+const text =
+input.value.trim();
 
-await addDoc(collection(db,"privateMessages"),{
+if(text==="") return;
+
+await addDoc(
+collection(db,"privateMessages"),
+{
 sender: myUid,
 receiver: receiverUid,
 text: text,
 time: Date.now()
-});
-
-document.getElementById("msg").value="";
 }
+);
+
+input.value = "";
+
+}
+
+document
+.getElementById("msg")
+.addEventListener(
+"keypress",
+function(e){
+
+if(e.key==="Enter"){
+
+sendMessage();
+
+}
+
+}
+);
 
 const q = query(
 collection(db,"privateMessages"),
@@ -135,42 +247,66 @@ orderBy("time")
 
 onSnapshot(q,(snapshot)=>{
 
-let html="";
+let html = "";
 
-snapshot.forEach((doc)=>{
+snapshot.forEach((docSnap)=>{
 
-const data = doc.data();
+const data =
+docSnap.data();
 
 if(
-(data.sender===myUid && data.receiver===receiverUid) ||
-(data.sender===receiverUid && data.receiver===myUid)
+
+(data.sender===myUid &&
+data.receiver===receiverUid)
+
+||
+
+(data.sender===receiverUid &&
+data.receiver===myUid)
+
 ){
 
-const mine = data.sender===myUid;
+const mine =
+data.sender===myUid;
 
-const time = new Date(data.time)
+const msgTime =
+new Date(data.time)
 .toLocaleTimeString([],{
 hour:"2-digit",
 minute:"2-digit"
 });
 
 html += `
-<div class="${mine ? 'myMessage' : 'otherMessage'}">
+
+<div class="${
+mine
+?
+'myMessage'
+:
+'otherMessage'
+}">
 ${data.text}
-<div class="time">${time}</div>
+<div class="time">
+${msgTime}
 </div>
-`;
+</div>
+`;}
 
-}
+});
+  document.getElementById("messages").innerHTML =
+html;
+
+const msgBox =
+document.getElementById("messages");
+
+msgBox.scrollTop =
+msgBox.scrollHeight;
 
 });
 
-document.getElementById("messages").innerHTML = html;
+setInterval(
+loadStatus,
+10000
+);
 
-document.getElementById("messages").scrollTop =
-document.getElementById("messages").scrollHeight;
-
-});
-
-</script></body>
-</html>
+</script></body></html>
