@@ -1,1 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodeChat - Home Feed</title>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: #000000; color: #ffffff; min-height: 100vh; display: flex; justify-content: center; padding-bottom: 65px; }
+    .feed-container { width: 100%; max-width: 500px; background: #000; min-height: 100vh; border-left: 1px solid #262626; border-right: 1px solid #262626; }
+    
+    .feed-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; position: sticky; top: 0; background: #000; z-index: 100; border-bottom: 1px solid #121212; }
+    .feed-header h1 { font-size: 24px; font-weight: 800; font-style: italic; letter-spacing: -1px; }
+    
+    .post-card { width: 100%; border-bottom: 1px solid #262626; padding-bottom: 15px; margin-bottom: 10px; }
+    .post-user-row { display: flex; align-items: center; padding: 10px 14px; gap: 10px; }
+    .post-avatar { width: 36px; height: 36px; border-radius: 50%; background: #262626; overflow: hidden; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
+    .post-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .post-username { font-size: 14px; font-weight: 600; }
+    
+    .post-main-img { width: 100%; max-height: 500px; object-fit: cover; background: #121212; }
+    .post-actions { display: flex; gap: 16px; padding: 12px 14px; color: white; }
+    .post-actions i { cursor: pointer; }
+    
+    .post-info-box { padding: 0 14px; display: flex; flex-direction: column; gap: 4px; }
+    .likes-count { font-size: 14px; font-weight: 700; }
+    .post-caption { font-size: 14px; line-height: 1.4; }
+    .post-caption span { font-weight: 700; margin-right: 6px; }
+
+    .instagram-navbar { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #000; border-top: 1px solid #262626; display: flex; justify-content: space-around; align-items: center; padding: 12px 0; z-index: 500; }
+    .nav-icon { color: #ffffff; cursor: pointer; text-decoration: none; }
+    .nav-icon.active { color: #0095f6; }
+</style>
+</head>
+<body>
+
+<div class="feed-container">
+    <header class="feed-header">
+        <h1>CodeChat</h1>
+        <i data-lucide="message-circle" onclick="location.href='search.html'" style="cursor: pointer;"></i>
+    </header>
+
+    <div id="feedBox">
+        <p style="text-align:center; color:#8e8e8e; padding:40px;">Loading Feed...</p>
+    </div>
+
+    <nav class="instagram-navbar">
+        <a href="feed.html" class="nav-icon active"><i data-lucide="home"></i></a>
+        <a href="search.html" class="nav-icon"><i data-lucide="search"></i></a>
+        <a href="upload.html" class="nav-icon"><i data-lucide="plus-square"></i></a>
+        <a href="reels.html" class="nav-icon"><i data-lucide="clapperboard"></i></a>
+        <a href="profile.html" class="nav-icon"><i data-lucide="user"></i></a>
+    </nav>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDgOaEVjw-L7O83Wj-N7j_XQYO8RuX4sQU",
+    authDomain: "code-chat-a82d0.firebaseapp.com",
+    projectId: "code-chat-a82d0",
+    storageBucket: "code-chat-a82d0.firebasestorage.app",
+    messagingSenderId: "863595576976",
+    appId: "1:863595576976:web:61217f6961e3e3a5016215"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+function listenFeed() {
+    const q = query(collection(db, "global_posts"), orderBy("timestamp", "desc"));
+    onSnapshot(q, (snapshot) => {
+        let html = "";
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            const uName = data.username || "user";
+            const avatarHtml = data.avatar ? `<img src="${data.avatar}">` : uName.charAt(0).toUpperCase();
+
+            html += `
+            <div class="post-card">
+                <div class="post-user-row">
+                    <div class="post-avatar">${avatarHtml}</div>
+                    <div class="post-username">${uName.toLowerCase()}</div>
+                </div>
+                <img src="${data.postImg}" class="post-main-img">
+                <div class="post-actions">
+                    <i data-lucide="heart" onclick="alert('Liked!')"></i>
+                    <i data-lucide="message-square"></i>
+                    <i data-lucide="send"></i>
+                </div>
+                <div class="post-info-box">
+                    <div class="likes-count">${data.likes || 0} likes</div>
+                    <div class="post-caption"><span>${uName.toLowerCase()}</span>${data.caption || ""}</div>
+                </div>
+            </div>`;
+        });
+        document.getElementById("feedBox").innerHTML = html || "<p style='text-align:center; padding:40px; color:#8e8e8e;'>No posts yet. Be the first to upload!</p>";
+        lucide.createIcons();
+    });
+}
+
+listenFeed();
+</script>
+</body>
+</html>
 
