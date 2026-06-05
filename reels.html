@@ -1,1 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reels</title>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #000; color: #fff; font-family: -apple-system, sans-serif; height: 100vh; overflow: hidden; display: flex; justify-content: center; }
+    
+    .reels-wrapper { width: 100%; max-width: 500px; height: 100vh; overflow-y: scroll; snap-type: y mandatory; scrollbar-width: none; padding-bottom: 60px; }
+    .reels-wrapper::-webkit-scrollbar { display: none; }
+    
+    .reel-video-card { width: 100%; height: calc(100vh - 60px); snap-align: start; position: relative; background: #0a0a0a; display: flex; align-items: center; justify-content: center; }
+    .reel-video-card video { width: 100%; height: 100%; object-fit: cover; }
+    
+    .reel-overlay-data { position: absolute; bottom: 20px; left: 15px; z-index: 10; display: flex; flex-direction: column; gap: 8px; max-width: 75%; }
+    .reel-user { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14px; }
+    .reel-user div { width: 32px; height: 32px; background: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+    .reel-caption { font-size: 13px; color: #e5e5e5; }
 
+    .reel-sidebar-actions { position: absolute; right: 15px; bottom: 40px; display: flex; flex-direction: column; gap: 20px; align-items: center; z-index: 10; }
+    .action-item { display: flex; flex-direction: column; align-items: center; font-size: 12px; gap: 4px; cursor: pointer; }
+
+    .instagram-navbar { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #000; border-top: 1px solid #262626; display: flex; justify-content: space-around; align-items: center; padding: 12px 0; z-index: 500; }
+    .nav-icon { color: #ffffff; cursor: pointer; text-decoration: none; }
+    .nav-icon.active { color: #0095f6; }
+</style>
+</head>
+<body>
+
+<div class="reels-wrapper">
+    <div class="reel-video-card">
+        <video src="https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-sign-light-watching-something-41913-large.mp4" loop autoplay muted onclick="this.paused ? this.play() : this.pause()"></video>
+        <div class="reel-overlay-data">
+            <div class="reel-user"><div>C</div> codechat_creator</div>
+            <p class="reel-caption">Vibe coding session at 2 AM! 🌌🔥 #coding #reels</p>
+        </div>
+        <div class="reel-sidebar-actions">
+            <div class="action-item" onclick="alert('Liked Reel!')"><i data-lucide="heart"></i><span>15K</span></div>
+            <div class="action-item"><i data-lucide="message-circle"></i><span>342</span></div>
+            <div class="action-item"><i data-lucide="send"></i></div>
+        </div>
+    </div>
+
+    <div class="reel-video-card">
+        <video src="https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-flowers-falling-in-autumn-48906-large.mp4" loop muted onclick="this.paused ? this.play() : this.pause()"></video>
+        <div class="reel-overlay-data">
+            <div class="reel-user"><div>N</div> nature_hub</div>
+            <p class="reel-caption">Autumn leaves falling down... Beautiful view! 🍂✨</p>
+        </div>
+        <div class="reel-sidebar-actions">
+            <div class="action-item" onclick="alert('Liked Reel!')"><i data-lucide="heart"></i><span>9.2K</span></div>
+            <div class="action-item"><i data-lucide="message-circle"></i><span>110</span></div>
+            <div class="action-item"><i data-lucide="send"></i></div>
+        </div>
+    </div>
+</div>
+
+<nav class="instagram-navbar">
+    <a href="feed.html" class="nav-icon"><i data-lucide="home"></i></a>
+    <a href="search.html" class="nav-icon"><i data-lucide="search"></i></a>
+    <a href="upload.html" class="nav-icon"><i data-lucide="plus-square"></i></a>
+    <a href="reels.html" class="nav-icon active"><i data-lucide="clapperboard"></i></a>
+    <a href="profile.html" class="nav-icon"><i data-lucide="user"></i></a>
+</nav>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>
