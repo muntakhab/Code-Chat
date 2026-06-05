@@ -1,54 +1,66 @@
-const receiverName = params.get("user");
-const receiverUid = params.get("uid");
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings</title>
 
-const myUid = localStorage.getItem("uid");
-
-document.getElementById("user").innerHTML =
-"💬 " + receiverName;
-
-window.sendMessage = async function(){
-
-const text = document.getElementById("msg").value;
-
-if(text.trim()=="") return;
-
-await addDoc(collection(db,"privateMessages"),{
-sender: myUid,
-receiver: receiverUid,
-text: text,
-time: Date.now()
-});
-
-document.getElementById("msg").value="";
+<style>
+body{
+background:#0f172a;
+color:white;
+font-family:Arial,sans-serif;
+margin:0;
+padding:20px;
 }
 
-const q = query(
-collection(db,"privateMessages"),
-orderBy("time")
-);
+h1{
+text-align:center;
+}
 
-onSnapshot(q,(snapshot)=>{
+.box{
+background:#1e293b;
+padding:15px;
+border-radius:12px;
+margin-top:15px;
+}
 
-let html="";
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+background:#2563eb;
+color:white;
+font-size:16px;
+margin-top:10px;
+}
+</style>
+</head>
 
-snapshot.forEach((doc)=>{
+<body>
 
-const data = doc.data();
+<h1>⚙️ Settings</h1>
 
-if(
-(data.sender === myUid && data.receiver === receiverUid) ||
-(data.sender === receiverUid && data.receiver === myUid)
-){
+<div class="box">
+<p>Code Chat Settings</p>
 
-html += `
+<button onclick="window.location.href='chat.html'">
+💬 Back To Chat
+</button>
 
-<div class="message">
-${data.text}
+<button onclick="logout()">
+🚪 Logout
+</button>
 </div>
-`;}
 
-});
+<script>
+function logout(){
+localStorage.removeItem("uid");
+localStorage.removeItem("email");
+window.location.href="login.html";
+}
+</script>
 
-document.getElementById("messages").innerHTML = html;
-
-});
+</body>
+</html>
