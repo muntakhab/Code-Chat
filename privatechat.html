@@ -256,21 +256,6 @@ snapshot.forEach((docSnap)=>{
 
 const data =
 docSnap.data();
- if(
-data.receiver===myUid &&
-data.sender===receiverUid &&
-data.seen===false
-){
-
-updateDoc() 
-doc(db,"privateMessages",docSnap.id),
-{
-seen:true
-}
-);
-
-}
-
 if(
 
 (data.sender===myUid &&
