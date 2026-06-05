@@ -1,22 +1,22 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CodeChat Pro - Premium Edition</title>
-<!-- Lucide Icons Library -->
+<title>CodeChat Premium - Instagram V3</title>
+<!-- Lucide Icons -->
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
 :root {
-    --bg-main: #000000;
-    --bg-side: #121212;
-    --bg-surface: #1e1e1e;
-    --accent: #3797f0;
-    --text-main: #f5f5f5;
-    --text-muted: #737373;
+    --black: #000000;
+    --dark-gray: #121212;
+    --surface: #1e1e1e;
     --border: #262626;
-    --success: #0095f6;
+    --ig-blue: #0095f6;
+    --text-pure: #f5f5f5;
+    --text-grey: #a8a8a8;
     --danger: #ed4956;
+    --success: #0095f6;
 }
 
 * {
@@ -25,276 +25,337 @@
 }
 
 body {
-    background: var(--bg-main);
-    color: var(--text-main);
+    background: var(--black);
+    color: var(--text-pure);
     height: 100vh;
     display: flex;
     overflow: hidden;
 }
 
-/* App Container */
-.app-container {
+.container {
     display: flex;
     width: 100%;
     height: 100vh;
 }
 
-/* Sidebar & Settings Navigation */
-.sidebar {
-    width: 320px;
-    background: var(--bg-side);
+/* LEFT SIDEBAR */
+.left-sidebar {
+    width: 350px;
+    background: var(--black);
     border-right: 1px solid var(--border);
     display: flex;
     flex-direction: column;
-    padding: 20px;
 }
 
-.brand-logo {
+.sidebar-header {
+    padding: 20px 16px 10px 16px;
+}
+
+.logo-section {
     font-size: 22px;
     font-weight: 700;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
     letter-spacing: -0.5px;
-    color: var(--text-main);
-    display: flex;
-    align-items: center;
-    gap: 10px;
 }
 
-/* My Profile Section inside Sidebar */
-.my-profile-card {
-    background: var(--bg-main);
-    padding: 15px;
-    border-radius: 16px;
-    border: 1px solid var(--border);
-    margin-bottom: 25px;
+.search-wrapper {
+    position: relative;
+    margin-bottom: 15px;
+}
+.search-wrapper input {
+    width: 100%;
+    background: #262626;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 12px 10px 38px;
+    color: white;
+    font-size: 14px;
+    outline: none;
+}
+.search-wrapper i {
+    position: absolute;
+    left: 12px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-grey);
+    width: 16px;
+}
+
+.chat-list-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 8px;
+}
+
+.user-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.user-item:hover { background: var(--dark-gray); }
+
+/* CENTER CHAT AREA */
+.chat-area {
+    flex: 1;
     display: flex;
     flex-direction: column;
+    background: var(--black);
+    border-right: 1px solid var(--border);
+}
+
+.chat-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
     align-items: center;
-    text-align: center;
-    position: relative;
+    justify-content: space-between;
 }
 
-.profile-pic-container {
-    position: relative;
-    cursor: pointer;
-    margin-bottom: 10px;
+.header-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-.my-avatar {
-    width: 75px; height: 75px;
+.avatar-medium {
+    width: 42px; height: 42px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid var(--accent);
+    background: #262626;
+    cursor: pointer;
 }
 
-.edit-pic-overlay {
-    position: absolute; bottom: 0; right: 0;
-    background: var(--accent);
-    padding: 6px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-}
-
-/* System Tabs (Chat, Follow, Settings) */
-.nav-tabs {
-    display: flex; flex-direction: column; gap: 8px; flex: 1;
-}
-
-.tab-btn {
-    display: flex; align-items: center; gap: 15px;
-    padding: 14px 18px; border-radius: 12px;
-    color: var(--text-main); background: transparent;
-    border: none; cursor: pointer; text-align: left;
-    font-size: 15px; font-weight: 500; transition: 0.2s;
-}
-
-.tab-btn:hover, .tab-btn.active {
-    background: var(--border);
-}
-
-/* Main Content Windows */
-.content-window {
-    flex: 1;
-    display: none;
-    flex-direction: column;
-    background: var(--bg-main);
-}
-
-.content-window.active {
+.header-actions {
     display: flex;
+    align-items: center;
+    gap: 18px;
 }
-
-/* Chat Screen UI */
-.chat-header {
-    padding: 15px 24px;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; gap: 15px;
-}
-
-.user-avatar {
-    width: 42px; height: 42px; border-radius: 50%;
-    background: #262626; display: flex; align-items: center; justify-content: center;
-    font-weight: bold; color: var(--accent);
-}
-
-.chat-user-details { flex: 1; }
-.chat-username { font-weight: 600; font-size: 16px; }
-.chat-status { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.header-actions i { cursor: pointer; transition: 0.2s; }
+.header-actions i:hover { color: var(--ig-blue); }
 
 #messages {
-    flex: 1; overflow-y: auto; padding: 24px;
-    display: flex; flex-direction: column; gap: 10px;
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.message-wrapper { display: flex; flex-direction: column; max-width: 70%; position: relative; }
+.message-wrapper { display: flex; flex-direction: column; max-width: 65%; position: relative; }
 .myWrapper { margin-left: auto; align-items: flex-end; }
 .otherWrapper { margin-right: auto; align-items: flex-start; }
 
 .bubble {
-    padding: 12px 18px; border-radius: 24px; font-size: 15px; line-height: 1.4;
-    word-wrap: break-word; cursor: pointer; position: relative;
+    padding: 12px 16px; border-radius: 22px; font-size: 14px; line-height: 1.4;
+    word-wrap: break-word; cursor: pointer; position: relative; user-select: none;
 }
-.myMessage .bubble { background: var(--accent); color: white; }
-.otherMessage .bubble { background: var(--border); color: white; }
+.myMessage .bubble { background: var(--ig-blue); color: white; }
+.otherMessage .bubble { background: #262626; color: white; }
 
 .heart-badge {
-    position: absolute; bottom: -8px; right: 14px;
+    position: absolute; bottom: -8px; right: 12px;
     background: #000; border: 1px solid var(--border);
-    border-radius: 12px; padding: 2px 6px; font-size: 11px;
+    border-radius: 12px; padding: 1px 5px; font-size: 11px;
 }
 
-.msg-time { font-size: 11px; color: var(--text-muted); margin-top: 4px; padding: 0 8px; }
+.msg-time { font-size: 10px; color: var(--text-grey); margin-top: 4px; padding: 0 5px; }
 
-/* Input Area */
-.input-container { padding: 20px; background: var(--bg-main); }
-.input-area {
-    display: flex; align-items: center; padding: 6px 12px 6px 20px;
-    border: 1px solid var(--border); border-radius: 30px; gap: 15px;
+.input-box-container { padding: 16px; }
+.input-pill {
+    display: flex; align-items: center; padding: 6px 12px 6px 18px;
+    border: 1px solid #363636; border-radius: 24px; gap: 12px;
 }
-.input-area input {
-    flex: 1; padding: 10px 0; border: none; background: transparent;
-    color: white; outline: none; font-size: 15px;
+.input-pill input {
+    flex: 1; padding: 8px 0; border: none; background: transparent;
+    color: white; outline: none; font-size: 14px;
 }
-.input-area button {
-    padding: 10px 20px; border: none; background: transparent;
-    color: var(--accent); font-weight: 600; font-size: 15px; cursor: pointer;
+.input-pill input:disabled {
+    color: var(--text-grey);
+    cursor: not-allowed;
+}
+.input-pill button {
+    background: transparent; border: none; color: var(--ig-blue);
+    font-weight: 600; font-size: 14px; cursor: pointer;
 }
 
-/* Follow System UI Panel */
-.panel-header { padding: 24px; border-bottom: 1px solid var(--border); font-size: 20px; font-weight: 700; }
-.panel-body { padding: 24px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 20px; }
-
-.section-title { font-size: 14px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-.user-row {
-    display: flex; align-items: center; justify-content: space-between;
-    background: var(--bg-side); padding: 15px; border-radius: 14px; border: 1px solid var(--border);
+/* RIGHT SIDEBAR - INSTAGRAM DETAILED PROFILE */
+.profile-panel-right {
+    width: 0;
+    background: var(--black);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    overflow: hidden;
+    transition: width 0.3s ease, padding 0.3s ease;
 }
-.user-row-info { display: flex; align-items: center; gap: 12px; }
-
-/* Modern Interaction Buttons */
-.btn-primary { background: var(--accent); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px; }
-.btn-success { background: var(--success); color: white; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px; margin-right: 5px; }
-.btn-danger { background: var(--danger); color: white; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px; }
-.btn-secondary { background: var(--border); color: var(--text-main); border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px; }
-
-/* Settings Form elements */
-.settings-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
-.settings-group label { font-size: 14px; color: var(--text-muted); }
-.settings-group input, .settings-group select {
-    background: var(--bg-side); border: 1px solid var(--border); color: white;
-    padding: 12px; border-radius: 10px; outline: none; font-size: 15px;
+.profile-panel-right.open {
+    width: 320px;
+    padding: 30px 20px;
 }
+
+.panel-avatar {
+    width: 85px; height: 85px;
+    border-radius: 50%; border: 2px solid var(--border);
+    margin-bottom: 12px; object-fit: cover;
+}
+
+/* INSTAGRAM FOLLOWER STATS GRID */
+.instagram-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+    text-align: center;
+    margin: 15px 0;
+    padding: 10px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+.stat-box data { font-size: 16px; font-weight: 700; color: white; }
+.stat-box div { font-size: 12px; color: var(--text-grey); }
+
+.profile-meta-details {
+    width: 100%;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+/* POPUP MODALS */
+.modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7); display: none; align-items: center;
+    justify-content: center; z-index: 1000;
+}
+.modal-content {
+    background: var(--surface); padding: 25px; border-radius: 14px;
+    width: 90%; max-width: 400px; text-align: center; border: 1px solid var(--border);
+}
+
+.btn-danger-outline { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;}
+.btn-success-filled { background: var(--ig-blue); border: none; color: white; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;}
+.btn-secondary { background: var(--border); border: none; color: white; padding: 10px 20px; border-radius: 8px; cursor: pointer;}
 </style>
 </head>
 <body>
 
-<div class="app-container">
+<div class="container">
     
-    <!-- LEFT SIDEBAR -->
-    <div class="sidebar">
-        <div class="brand-logo"><i data-lucide="message-circle-code" style="color: var(--accent);"></i> CodeChat Pro</div>
-        
-        <!-- Live Current Profile Setup -->
-        <div class="my-profile-card">
-            <div class="profile-pic-container" onclick="triggerProfilePicUpload()">
-                <img id="myAvatarDisplay" class="my-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=default" alt="Avatar">
-                <div class="edit-pic-overlay"><i data-lucide="camera" style="width:14px; height:14px; color:white;"></i></div>
+    <!-- LEFT SIDEBAR: SEARCH & USERS LIST -->
+    <div class="left-sidebar">
+        <div class="sidebar-header">
+            <div class="logo-section">CodeChat Pro</div>
+            <div class="search-wrapper">
+                <i data-lucide="search"></i>
+                <input type="text" id="userSearch" placeholder="Search username..." oninput="filterUsers()">
             </div>
-            <input type="file" id="profilePicInput" style="display: none;" accept="image/*" onchange="uploadProfilePic()">
-            <h4 id="myUsernameDisplay" style="margin-top: 5px; font-weight: 600;">Loading...</h4>
-            <span style="font-size: 11px; color: var(--success);">● Active Account</span>
         </div>
-
-        <!-- Navigation Tabs -->
-        <div class="nav-tabs">
-            <button class="tab-btn active" onclick="switchWindow('chat-window')"><i data-lucide="message-square"></i> Messages</button>
-            <button class="tab-btn" onclick="switchWindow('network-window')"><i data-lucide="user-plus"></i> Connect & Follow</button>
-            <button class="tab-btn" onclick="switchWindow('settings-window')"><i data-lucide="settings"></i> Settings</button>
+        <div class="chat-list-container" id="userChatList">
+            <!-- Mock Users (Aap isme Firebase data map kar sakte hain) -->
+            <div class="user-item" onclick="selectUser('Raj_Official', 'raj_uid', '✨ Digital Creator | Photography is life 📸', '2.5K', '480', '12')">
+                <div class="avatar-medium" style="background:#a855f7; display:flex; align-items:center; justify-content:center; font-weight:bold;">R</div>
+                <div><strong>Raj_Official</strong><br><span style="font-size:12px; color:var(--text-grey);">Active now</span></div>
+            </div>
+            <div class="user-item" onclick="selectUser('sneha_clips', 'sneha_uid', 'Code enthusiast 💻 | Coffee lover ☕', '12.8K', '1.2K', '85')">
+                <div class="avatar-medium" style="background:#ec4899; display:flex; align-items:center; justify-content:center; font-weight:bold;">S</div>
+                <div><strong>sneha_clips</strong><br><span style="font-size:12px; color:var(--text-grey);">Active 5m ago</span></div>
+            </div>
         </div>
     </div>
 
-    <!-- WINDOW 1: CHAT INTERFACE -->
-    <div id="chat-window" class="content-window active">
+    <!-- CENTER AREA: CHAT SCREEN -->
+    <div class="chat-area">
         <div class="chat-header">
-            <div class="user-avatar" id="chatUserAvatar">U</div>
-            <div class="chat-user-details">
-                <div class="chat-username" id="chatTargetUser">Loading user...</div>
-                <div class="chat-status" id="chatTargetStatus">checking status...</div>
+            <div class="header-user-info">
+                <div class="avatar-medium" id="chatHeaderAvatar" onclick="toggleRightPanel()" style="background:var(--ig-blue); display:flex; align-items:center; justify-content:center; font-weight:bold;">U</div>
+                <div>
+                    <div style="font-weight: 600;" id="currentChatUser">Select a conversation</div>
+                    <div style="font-size: 12px; color: var(--text-grey);" id="currentChatStatus">online</div>
+                </div>
             </div>
-            <div style="cursor: pointer;"><i data-lucide="phone"></i></div>
+            <div class="header-actions">
+                <i data-lucide="phone" onclick="startCall('Voice')"></i>
+                <i data-lucide="video" onclick="startCall('Video')"></i>
+                <i data-lucide="info" onclick="toggleRightPanel()"></i> <!-- PROFILE TOGGLE ICON -->
+                <i data-lucide="more-horizontal" onclick="openSettingsModal()"></i>
+            </div>
         </div>
+
+        <!-- Chat Messages -->
         <div id="messages"></div>
-        <div class="input-container">
-            <div class="input-area">
-                <i data-lucide="smile" style="color: var(--text-muted); cursor:pointer;"></i>
+
+        <!-- Block Alert Banner (Initially Hidden) -->
+        <div id="blockBanner" style="display:none; background:#26080a; color:var(--danger); padding:10px; text-align:center; font-size:13px; border-top:1px solid var(--danger);">
+            You have blocked this user. Unblock to resume chat.
+        </div>
+
+        <!-- Input Pill -->
+        <div class="input-box-container">
+            <div class="input-pill" id="inputPillContainer">
+                <i data-lucide="smile" style="color: var(--text-grey); cursor: pointer;"></i>
                 <input id="msg" placeholder="Message..." autocomplete="off">
-                <button onclick="sendMessage()">Send</button>
+                <button id="sendBtn" onclick="sendMessage()">Send</button>
             </div>
         </div>
     </div>
 
-    <!-- WINDOW 2: FOLLOW / CONNECT NETWORK -->
-    <div id="network-window" class="content-window">
-        <div class="panel-header">Connect Network</div>
-        <div class="panel-body">
-            <!-- Pending Requests (Accept / Reject) -->
-            <div class="section-title">Follow Requests (Pending)</div>
-            <div id="pendingRequestsList">
-                <!-- Javascript will load requests here -->
-                <p style="color: var(--text-muted); font-size:14px;">No pending requests</p>
-            </div>
+    <!-- RIGHT SIDEBAR: DETAILED INSTAGRAM PROFILE AND BLOCK OPTION -->
+    <div class="profile-panel-right" id="rightProfilePanel">
+        <div style="width: 100%; display: flex; justify-content: flex-end; cursor: pointer; margin-bottom: 10px;" onclick="toggleRightPanel()"><i data-lucide="x"></i></div>
+        
+        <img class="panel-avatar" id="panelAvatarImg" src="https://api.dicebear.com/7.x/beta/svg?seed=Felix" alt="Profile">
+        <h3 id="panelUsername" style="font-weight: 600; margin-bottom: 2px;">Username</h3>
+        <p id="panelHandle" style="font-size: 12px; color: var(--text-grey); margin-bottom: 10px;">@username</p>
+        
+        <p id="panelBio" style="font-size: 13px; color: #dbdbdb; text-align: center; padding: 0 10px; min-height: 40px;">No bio available</p>
 
-            <!-- Discover/Follow New Users -->
-            <div class="section-title" style="margin-top: 20px;">Discover Creators</div>
-            <div id="discoverUsersList">
-                <!-- Javascript will load available users to follow -->
-            </div>
+        <!-- INSTAGRAM STATS -->
+        <div class="instagram-stats">
+            <div class="stat-box"><data id="statPosts">0</data><div>Posts</div></div>
+            <div class="stat-box"><data id="statFollowers">0</data><div>Followers</div></div>
+            <div class="stat-box"><data id="statFollowing">0</data><div>Following</div></div>
         </div>
-    </div>
 
-    <!-- WINDOW 3: SETTINGS VIEW -->
-    <div id="settings-window" class="content-window">
-        <div class="panel-header">Account Settings</div>
-        <div class="panel-body" style="max-width: 600px;">
-            <div class="settings-group">
-                <label>Display Name</label>
-                <input type="text" id="settingsUsername" placeholder="Enter your name">
-            </div>
-            <div class="settings-group">
-                <label>Status Privacy</label>
-                <select id="settingsPrivacy">
-                    <option value="online">Show Active Status (Online)</option>
-                    <option value="offline">Stealth Mode (Offline)</option>
-                </select>
-            </div>
-            <button class="btn-primary" style="width: 100%; padding: 14px;" onclick="saveAccountSettings()">Save Configurations</button>
+        <div class="profile-meta-details">
+            <div><i data-lucide="shield-check" style="width:16px; color:var(--ig-blue); display:inline; vertical-align:middle; margin-right:8px;"></i>Account Verified</div>
+            <div style="margin-bottom: 15px;"><i data-lucide="calendar" style="width:16px; color:var(--text-grey); display:inline; vertical-align:middle; margin-right:8px;"></i>Joined June 2026</div>
+            
+            <!-- BLOCK ACTION BUTTON -->
+            <button id="blockActionBtn" class="btn-danger-outline" onclick="toggleBlockUser()">
+                <i data-lucide="user-x" style="width:16px;"></i> <span id="blockBtnText">Block Account</span>
+            </button>
         </div>
     </div>
 
 </div>
 
+<!-- SETTINGS MODAL -->
+<div class="modal" id="settingsModal">
+    <div class="modal-content">
+        <h3 style="margin-bottom: 15px;">Options</h3>
+        <button class="btn-secondary" style="width:100%; padding:12px; margin-bottom:10px;" onclick="closeSettingsModal()">Close</button>
+    </div>
+</div>
+
+<!-- CALL MODAL -->
+<div class="modal" id="callModal">
+    <div class="modal-content">
+        <h2 id="callTypeTitle">Calling...</h2>
+        <p id="callUserTarget" style="color: var(--text-grey); margin: 10px 0 20px 0;">Connecting...</p>
+        <button class="btn-secondary" onclick="document.getElementById('callModal').style.display='none'">End Call</button>
+    </div>
+</div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, getDoc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDgOaEVjw-L7O83Wj-N7j_XQYO8RuX4sQU",
@@ -308,180 +369,114 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Global State Parameters
-const params = new URLSearchParams(window.location.search);
-const receiverName = params.get("user") || "User Contact";
-const receiverUid = params.get("uid") || "demo_receiver";
-const myUid = localStorage.getItem("uid") || "current_user_id";
+// State Variables
+let targetUser = "Raj_Official";
+let targetUid = "raj_uid";
+const myUid = localStorage.getItem("uid") || "my_session_uid";
+let blockedUsersList = JSON.parse(localStorage.getItem("blockedUsers")) || [];
 
-// Initialize Local User Name if not exist
-if(!localStorage.getItem("username")) {
-    localStorage.setItem("username", "Me_Pro_User");
-}
-
-document.getElementById("myUsernameDisplay").innerText = localStorage.getItem("username");
-document.getElementById("settingsUsername").value = localStorage.getItem("username");
-document.getElementById("chatTargetUser").innerText = receiverName;
-document.getElementById("chatUserAvatar").innerText = receiverName.charAt(0).toUpperCase();
-
-// Initialize Lucide Icons
 lucide.createIcons();
 
-// --- 1. WINDOW NAVIGATION LOGIC ---
-window.switchWindow = function(windowId) {
-    document.querySelectorAll('.content-window').forEach(win => win.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    
-    document.getElementById(windowId).classList.add('active');
-    event.currentTarget.classList.add('active');
-};
-
-// --- 2. PROFILE IMAGE SYSTEM ---
-window.triggerProfilePicUpload = function() {
-    document.getElementById("profilePicInput").click();
-};
-
-window.uploadProfilePic = function() {
-    const file = document.getElementById("profilePicInput").files[0];
-    if(file) {
-        const reader = new FileReader();
-        reader.onloadend = function() {
-            const base64String = reader.result;
-            // Local Storage & Firebase update
-            localStorage.setItem("myAvatar", base64String);
-            document.getElementById("myAvatarDisplay").src = base64String;
-            
-            // Sync status collection inside Firestore
-            setDoc(doc(db, "userStatus", myUid), {
-                avatar: base64String,
-                username: localStorage.getItem("username")
-            }, { merge: true });
+// --- 1. USERNAME SEARCH FILTER ---
+window.filterUsers = function() {
+    const filter = document.getElementById("userSearch").value.toUpperCase();
+    const items = document.querySelectorAll(".user-item");
+    items.forEach(item => {
+        const text = item.getElementsByTagName("strong")[0].innerText;
+        if (text.toUpperCase().indexOf(filter) > -1) {
+            item.style.display = "";
+        } else {
+            item.style.display = "none";
         }
-        reader.readAsDataURL(file);
+    });
+};
+
+// --- 2. SELECT USER & LOAD BIO/FOLLOWERS SYSTEM ---
+window.selectUser = function(username, uid, bio, followers, following, posts) {
+    targetUser = username;
+    targetUid = uid;
+
+    // Center header updates
+    document.getElementById("currentChatUser").innerText = username;
+    document.getElementById("chatHeaderAvatar").innerText = username.charAt(0).toUpperCase();
+
+    // Right profile panel information mapping
+    document.getElementById("panelUsername").innerText = username;
+    document.getElementById("panelHandle").innerText = "@" + username.toLowerCase();
+    document.getElementById("panelBio").innerText = bio ? bio : "No bio text added yet.";
+    document.getElementById("statFollowers").innerText = followers;
+    document.getElementById("statFollowing").innerText = following;
+    document.getElementById("statPosts").innerText = posts;
+
+    // Right sidebar open animation triggers automatically on search click
+    document.getElementById("rightProfilePanel").classList.add("open");
+
+    // Check Block Status UI
+    checkBlockStatusUI();
+    loadMessagesEngine();
+};
+
+// --- 3. RIGHT PROFILE PANEL MANUAL TOGGLE ---
+window.toggleRightPanel = function() {
+    document.getElementById("rightProfilePanel").classList.toggle("open");
+};
+
+// --- 4. ENGINE: BLOCK / UNBLOCK CORE LOGIC ---
+window.toggleBlockUser = function() {
+    if (blockedUsersList.includes(targetUid)) {
+        // Unblock Logic
+        blockedUsersList = blockedUsersList.filter(id => id !== targetUid);
+        alert(`${targetUser} has been unblocked.`);
+    } else {
+        // Block Logic
+        blockedUsersList.push(targetUid);
+        alert(`You blocked ${targetUser}. You won't receive messages from this account.`);
     }
+    localStorage.setItem("blockedUsers", JSON.stringify(blockedUsersList));
+    checkBlockStatusUI();
 };
 
-// Load Saved Avatar on Startup
-if(localStorage.getItem("myAvatar")) {
-    document.getElementById("myAvatarDisplay").src = localStorage.getItem("myAvatar");
+function checkBlockStatusUI() {
+    const isBlocked = blockedUsersList.includes(targetUid);
+    const msgInput = document.getElementById("msg");
+    const sendBtn = document.getElementById("sendBtn");
+    const blockBtnText = document.getElementById("blockBtnText");
+    const blockActionBtn = document.getElementById("blockActionBtn");
+
+    if (isBlocked) {
+        msgInput.disabled = true;
+        msgInput.placeholder = "Unblock to send messages...";
+        document.getElementById("blockBanner").style.display = "block";
+        blockBtnText.innerText = "Unblock Account";
+        blockActionBtn.className = "btn-success-filled";
+    } else {
+        msgInput.disabled = false;
+        msgInput.placeholder = "Message...";
+        document.getElementById("blockBanner").style.display = "none";
+        blockBtnText.innerText = "Block Account";
+        blockActionBtn.className = "btn-danger-outline";
+    }
+    lucide.createIcons();
 }
 
-// --- 3. SETTINGS CONTROL PANEL ---
-window.saveAccountSettings = async function() {
-    const newName = document.getElementById("settingsUsername").value.trim();
-    const privacy = document.getElementById("settingsPrivacy").value;
-
-    if(newName === "") return alert("Name cannot be empty!");
-    
-    localStorage.setItem("username", newName);
-    document.getElementById("myUsernameDisplay").innerText = newName;
-
-    await setDoc(doc(db, "userStatus", myUid), {
-        username: newName,
-        online: (privacy === "online"),
-        lastSeen: Date.now()
-    }, { merge: true });
-
-    alert("Settings synchronized successfully!");
+// --- 5. CALLING POPUPS ---
+window.startCall = function(type) {
+    if(blockedUsersList.includes(targetUid)) return alert("Cannot call a blocked contact.");
+    document.getElementById("callTypeTitle").innerText = `${type} Calling...`;
+    document.getElementById("callUserTarget").innerText = `Ringing ${targetUser}...`;
+    document.getElementById("callModal").style.display = "flex";
 };
 
-// --- 4. FOLLOW SYSTEM ENGINE (FOLLOW, ACCEPT, REJECT, FOLLOW BACK) ---
-window.sendFollowRequest = async function(targetUserId) {
-    await setDoc(doc(db, "interactions", `${myUid}_to_${targetUserId}`), {
-        from: myUid,
-        to: targetUserId,
-        status: "pending", // pending, accepted, rejected
-        timestamp: Date.now()
-    });
-    alert("Follow Request Sent!");
-    loadNetworkConnections();
-};
-
-window.handleRequestAction = async function(requestId, actionStatus) {
-    // actionStatus can be 'accepted' or 'rejected'
-    await updateDoc(doc(db, "interactions", requestId), {
-        status: actionStatus
-    });
-    alert(`Request ${actionStatus}!`);
-};
-
-// Realtime Sync Network & Follow Data
-function loadNetworkConnections() {
-    // 1. Listen for Incoming Requests to ME
-    const qRequests = query(collection(db, "interactions"));
-    onSnapshot(qRequests, (snapshot) => {
-        let reqHtml = "";
-        let discoverHtml = `<div class="user-row">
-            <div class="user-row-info">
-                <div class="user-avatar">SR</div>
-                <div><strong>Suresh Kumar</strong><br><span style="font-size:12px; color:var(--text-muted)">Suggested for you</span></div>
-            </div>
-            <button class="btn-primary" onclick="sendFollowRequest('suresh_uid')">Follow</button>
-        </div>`; // Fallback sample user
-
-        snapshot.forEach((docSnap) => {
-            const data = docSnap.data();
-            const id = docSnap.id;
-
-            // Incoming requests logic
-            if(data.to === myUid && data.status === "pending") {
-                reqHtml += `
-                    <div class="user-row">
-                        <div class="user-row-info">
-                            <div class="user-avatar">U</div>
-                            <div><strong>User (${data.from.substring(0,5)})</strong> requested to follow you.</div>
-                        </div>
-                        <div>
-                            <button class="btn-success" onclick="handleRequestAction('${id}', 'accepted')">Accept</button>
-                            <button class="btn-danger" onclick="handleRequestAction('${id}', 'rejected')">Reject</button>
-                        </div>
-                    </div>`;
-            }
-
-            // Follow back scenario status dashboard
-            if(data.from === myUid && data.status === "accepted") {
-                discoverHtml += `
-                    <div class="user-row">
-                        <div class="user-row-info">
-                            <div class="user-avatar" style="border: 2px solid var(--success)">✓</div>
-                            <div><strong>User (${data.to.substring(0,5)})</strong></div>
-                        </div>
-                        <button class="btn-secondary" disabled>Following</button>
-                    </div>`;
-            }
-        });
-
-        if(reqHtml !== "") document.getElementById("pendingRequestsList").innerHTML = reqHtml;
-        document.getElementById("discoverUsersList").innerHTML = discoverHtml;
-    });
-}
-loadNetworkConnections();
-
-// --- 5. REAL-TIME CHAT OPERATIONS (INSTAGRAM STYLE + DOUBLE TAP LIKE) ---
-async function fetchTargetStatus(){
-    try{
-        const statusDoc = await getDoc(doc(db, "userStatus", receiverUid));
-        if(statusDoc.exists()){
-            const status = statusDoc.data();
-            if(status.online){
-                document.getElementById("chatTargetStatus").innerHTML = "🟢 Active now";
-                document.getElementById("chatTargetStatus").style.color = "var(--success)";
-            } else {
-                document.getElementById("chatTargetStatus").innerHTML = "⚫ Offline";
-            }
-        }
-    } catch(err){}
-}
-fetchTargetStatus();
-
-window.sendMessage = async function(){
+// --- 6. MESSAGING & INSTAGRAM DOUBLE TAP LIKE ---
+window.sendMessage = async function() {
+    if(blockedUsersList.includes(targetUid)) return;
     const input = document.getElementById("msg");
     const text = input.value.trim();
     if(text === "") return;
 
     await addDoc(collection(db, "privateMessages"), {
         sender: myUid,
-        receiver: receiverUid,
+        receiver: targetUid,
         text: text,
         time: Date.now(),
         seen: false,
@@ -496,33 +491,41 @@ window.toggleLikeMessage = async function(msgId, currentLikeStatus) {
     await updateDoc(doc(db, "privateMessages", msgId), { liked: !currentLikeStatus });
 };
 
-// Chat Snapshots Reader
-const qMessages = query(collection(db, "privateMessages"), orderBy("time"));
-onSnapshot(qMessages, (snapshot) => {
-    let html = "";
-    snapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        const msgId = docSnap.id;
+// Load Messages Engine
+function loadMessagesEngine() {
+    const q = query(collection(db, "privateMessages"), orderBy("time"));
+    onSnapshot(q, (snapshot) => {
+        let html = "";
+        snapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            const msgId = docSnap.id;
 
-        if((data.sender === myUid && data.receiver === receiverUid) || (data.receiver === myUid && data.sender === receiverUid)){
-            const mine = data.sender === myUid;
-            const msgTime = new Date(data.time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-            const heart = data.liked ? `<div class="heart-badge">❤️</div>` : '';
+            if((data.sender === myUid && data.receiver === targetUid) || (data.receiver === myUid && data.sender === targetUid)){
+                const mine = data.sender === myUid;
+                const msgTime = new Date(data.time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+                const heart = data.liked ? `<div class="heart-badge">❤️</div>` : '';
 
-            html += `
-                <div class="message-wrapper ${mine ? 'myWrapper myMessage' : 'otherWrapper otherMessage'}">
-                    <div class="bubble" ondblclick="toggleLikeMessage('${msgId}', ${data.liked})">
-                        ${data.text}
-                        ${heart}
-                    </div>
-                    <div class="msg-time">${msgTime} ${mine ? (data.seen ? '• Seen' : '• Sent') : ''}</div>
-                </div>`;
-        }
+                html += `
+                    <div class="message-wrapper ${mine ? 'myWrapper myMessage' : 'otherWrapper otherMessage'}">
+                        <div class="bubble" ondblclick="toggleLikeMessage('${msgId}', ${data.liked})">
+                            ${data.text}
+                            ${heart}
+                        </div>
+                        <div class="msg-time">${msgTime} ${mine ? (data.seen ? '• Seen' : '• Sent') : ''}</div>
+                    </div>`;
+            }
+        });
+        const mBox = document.getElementById("messages");
+        mBox.innerHTML = html;
+        mBox.scrollTop = mBox.scrollHeight;
     });
-    const mBox = document.getElementById("messages");
-    mBox.innerHTML = html;
-    mBox.scrollTop = mBox.scrollHeight;
-});
+}
+
+window.openSettingsModal = function() { document.getElementById("settingsModal").style.display = "flex"; };
+window.closeSettingsModal = function() { document.getElementById("settingsModal").style.display = "none"; };
+
+// Initial Load
+selectUser('Raj_Official', 'raj_uid', '✨ Digital Creator | Photography is life 📸', '2.5K', '480', '12');
 </script>
 </body>
 </html>
