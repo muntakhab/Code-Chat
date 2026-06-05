@@ -53,39 +53,50 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 async function fetchUsers() {
-    const snapshot = await getDocs(collection(db, "users"));
-    let html = "";
-    snapshot.forEach((doc) => {
-        const data = doc.data();
-        const bio = data.bio || "Hey there! I am using CodeChat. 🚀";
-        const followers = data.followersCount || "1.2K";
-        const following = data.followingCount || "340";
-        const initial = data.username ? data.username.charAt(0).toUpperCase() : "U";
+    try {
+        const snapshot = await getDocs(collection(db, "users"));
+        let html = "";
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            
+            // Safety Check: Agar kisi user ka username database me na ho toh issue handle karein
+            const uName = data.username || "Unknown User";
+            const uUID = data.uid || "";
+            const bio = data.bio || "Hey there! I am using CodeChat. 🚀";
+            const followers = data.followersCount || "1.2K";
+            const following = data.followingCount || "340";
+            const initial = uName.charAt(0).toUpperCase();
 
-        html += `
-        <div class="user-card" onclick="location.href='privatechat.html?user=${data.username}&uid=${data.uid}'">
-            <div class="card-top">
-                <div class="avatar-placeholder">${initial}</div>
-                <div>
-                    <h3 style="font-size:15px; font-weight:600;">${data.username}</h3>
-                    <p style="font-size:12px; color:#a8a8a8;">@${data.username.toLowerCase()}</p>
+            html += `
+            <div class="user-card" onclick="location.href='privatechat.html?user=${uName}&uid=${uUID}'">
+                <div class="card-top">
+                    <div class="avatar-placeholder">${initial}</div>
+                    <div>
+                        <h3 style="font-size:15px; font-weight:600;">${uName}</h3>
+                        <p style="font-size:12px; color:#a8a8a8;">@${uName.toLowerCase()}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="user-bio">${bio}</div>
-            <div class="card-stats">
-                <div><span>${followers}</span>followers</div>
-                <div><span>${following}</span>following</div>
-            </div>
-        </div>`;
-    });
-    document.getElementById("users").innerHTML = html;
+                <div class="user-bio">${bio}</div>
+                <div class="card-stats">
+                    <div><span>${followers}</span>followers</div>
+                    <div><span>${following}</span>following</div>
+                </div>
+            </div>`;
+        });
+        document.getElementById("users").innerHTML = html || "<p style='text-align:center; color:#a8a8a8;'>No users found in database.</p>";
+    } catch (error) {
+        console.error("Firestore loading error: ", error);
+    }
 }
 
 window.searchFilterEngine = function() {
     const query = document.getElementById("search").value.toUpperCase();
     document.querySelectorAll(".user-card").forEach(card => {
-        const name = card.querySelector("h3").innerText;
-        card.style.display = name.toUpperCase().includes(query) ? "block" : "none";
+        const nameElement = card.querySelector("h3");
+        if(nameElement) {
+            const name = nameElement.innerText;
+            card.style.display = name.toUpperCase().includes(query) ? "block" : "none";
+        }
     });
 };
 
