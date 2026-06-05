@@ -231,7 +231,12 @@ function(e){
 
 if(e.key==="Enter"){
 
-sendMessage();
+window.sendMessage = async function(){
+
+alert("Send Button Working");
+
+const input =
+document.getElementById("msg");;
 
 }
 
