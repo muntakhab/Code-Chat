@@ -147,7 +147,9 @@ const myUid =
 localStorage.getItem("uid");
 
 document.getElementById("user").innerHTML =
-"💬 " + receiverName;async function loadStatus(){
+"💬 " + receiverName;
+  
+  async function loadStatus(){
 
 try{
 
@@ -263,7 +265,8 @@ seen:true
 }
 );
 
-}if(
+}
+if(
 
 (data.sender===myUid &&
 data.receiver===receiverUid)
