@@ -1,332 +1,233 @@
-<!DOCTYPE html><html>
+<!DOCTYPE html>
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CodeChat Private Chat</title><style>
-
+<title>CodeChat Private Chat</title>
+<style>
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
 body{
-background:#0f172a;
-color:white;
-font-family:Arial,sans-serif;
-height:100vh;
-display:flex;
-flex-direction:column;
+    background:#0f172a;
+    color:white;
+    font-family:Arial,sans-serif;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
 }
 
 .header{
-background:#111827;
-padding:15px;
-border-bottom:1px solid #1f2937;
+    background:#111827;
+    padding:15px;
+    border-bottom:1px solid #1f2937;
 }
 
 #user{
-font-size:18px;
-font-weight:bold;
+    font-size:18px;
+    font-weight:bold;
 }
 
 .status{
-font-size:12px;
-margin-top:4px;
-color:#9ca3af;
+    font-size:12px;
+    margin-top:4px;
+    color:#9ca3af;
 }
 
 #messages{
-flex:1;
-overflow-y:auto;
-padding:15px;
-display:flex;
-flex-direction:column;
-gap:10px;
+    flex:1;
+    overflow-y:auto;
+    padding:15px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
 }
 
 .myMessage{
-background:#2563eb;
-padding:10px;
-border-radius:12px;
-margin-left:auto;
-max-width:75%;
-word-wrap:break-word;
+    background:#2563eb;
+    padding:10px;
+    border-radius:12px;
+    margin-left:auto;
+    max-width:75%;
+    word-wrap:break-word;
 }
 
 .otherMessage{
-background:#374151;
-padding:10px;
-border-radius:12px;
-max-width:75%;
-word-wrap:break-word;
+    background:#374151;
+    padding:10px;
+    border-radius:12px;
+    max-width:75%;
+    word-wrap:break-word;
 }
 
 .time{
-font-size:11px;
-opacity:.7;
-margin-top:5px;
+    font-size:11px;
+    opacity:.7;
+    margin-top:5px;
 }
 
 .input-area{
-display:flex;
-padding:10px;
-background:#111827;
-gap:10px;
+    display:flex;
+    padding:10px;
+    background:#111827;
+    gap:10px;
 }
 
 .input-area input{
-flex:1;
-padding:12px;
-border:none;
-border-radius:10px;
-outline:none;
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    outline:none;
 }
 
 .input-area button{
-padding:12px 18px;
-border:none;
-border-radius:10px;
-background:#2563eb;
-color:white;
-cursor:pointer;
+    padding:12px 18px;
+    border:none;
+    border-radius:10px;
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
 }
+</style>
+</head>
+<body>
 
-</style></head><body><div class="header">
-<div id="user">Loading...</div>
-<div class="status" id="status">Checking status...</div>
-</div><div id="messages"></div><div class="input-area">
-<input
-id="msg"
-placeholder="Type message..."
-autocomplete="off"><button onclick="sendMessage()">
-Send
-</button>
-</div><script type="module">
+<div class="header">
+    <div id="user">Loading...</div>
+    <div class="status" id="status">Checking status...</div>
+</div>
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+<div id="messages"></div>
 
-import {
-getFirestore,
-collection,
-addDoc,
-onSnapshot,
-query,
-orderBy,
-doc,
-getDoc,
-updateDoc
-}
-from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+<div class="input-area">
+    <input id="msg" placeholder="Type message..." autocomplete="off">
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
-
-apiKey:"AIzaSyDgOaEVjw-L7O83Wj-N7j_XQYO8RuX4sQU",
-authDomain:"code-chat-a82d0.firebaseapp.com",
-projectId:"code-chat-a82d0",
-storageBucket:"code-chat-a82d0.firebasestorage.app",
-messagingSenderId:"863595576976",
-appId:"1:863595576976:web:61217f6961e3e3a5016215"
-
+    apiKey: "AIzaSyDgOaEVjw-L7O83Wj-N7j_XQYO8RuX4sQU",
+    authDomain: "code-chat-a82d0.firebaseapp.com",
+    projectId: "code-chat-a82d0",
+    storageBucket: "code-chat-a82d0.firebasestorage.app",
+    messagingSenderId: "863595576976",
+    appId: "1:863595576976:web:61217f6961e3e3a5016215"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const params =
-new URLSearchParams(window.location.search);
+const params = new URLSearchParams(window.location.search);
+const receiverName = params.get("user") || "Unknown User";
+const receiverUid = params.get("uid");
+const myUid = localStorage.getItem("uid");
 
-const receiverName =
-params.get("user");
-
-const receiverUid =
-params.get("uid");
-
-const myUid =
-localStorage.getItem("uid");
-
-document.getElementById("user").innerHTML =
-"💬 " + receiverName;
+document.getElementById("user").innerHTML = "💬 " + receiverName;
   
-  async function loadStatus(){
-
-try{
-
-const statusDoc =
-await getDoc(
-doc(db,"userStatus",receiverUid)
-);
-
-if(statusDoc.exists()){
-
-const status =
-statusDoc.data();
-
-if(status.online){
-
-document.getElementById("status").innerHTML =
-"🟢 Online";
-
-}else{
-
-const lastSeen =
-new Date(
-status.lastSeen || Date.now()
-).toLocaleString();
-
-document.getElementById("status").innerHTML =
-"⚫ Last Seen: " + lastSeen;
-
+// Status Load Karne Ka Function
+async function loadStatus(){
+    if(!receiverUid) {
+        document.getElementById("status").innerHTML = "⚫ User ID missing";
+        return;
+    }
+    try{
+        const statusDoc = await getDoc(doc(db, "userStatus", receiverUid));
+        if(statusDoc.exists()){
+            const status = statusDoc.data();
+            if(status.online){
+                document.getElementById("status").innerHTML = "🟢 Online";
+            } else {
+                const lastSeen = status.lastSeen ? new Date(status.lastSeen).toLocaleString() : "Unknown";
+                document.getElementById("status").innerHTML = "⚫ Last Seen: " + lastSeen;
+            }
+        } else {
+            document.getElementById("status").innerHTML = "⚫ Offline";
+        }
+    } catch(error){
+        console.error("Status Error:", error);
+        document.getElementById("status").innerHTML = "⚫ Offline";
+    }
 }
 
-}else{
-
-document.getElementById("status").innerHTML =
-"⚫ Offline";
-
-}
-
-}catch(error){
-
-document.getElementById("status").innerHTML =
-"⚫ Offline";
-
-}
-
-}
-
+// Pehli baar status load karein
 loadStatus();
 
+// Message Send Karne Ka Sahi Function
 window.sendMessage = async function(){
+    const input = document.getElementById("msg");
+    const text = input.value.trim();
+    if(text === "") return;
 
-const input =
-document.getElementById("msg");
+    if(!myUid || !receiverUid) {
+        alert("User session error! Please login again.");
+        return;
+    }
 
-const text =
-input.value.trim();
-
-if(text==="") return;
-
-await addDoc(
-collection(db,"privateMessages"),
-{
-sender: myUid,
-receiver: receiverUid,
-text: text,
-time: Date.now(),
-seen:false
-}
-);
-
-input.value = "";
-
+    try {
+        await addDoc(collection(db, "privateMessages"), {
+            sender: myUid,
+            receiver: receiverUid,
+            text: text,
+            time: Date.now(),
+            seen: false
+        });
+        input.value = "";
+    } catch (error) {
+        console.error("Error sending message:", error);
+    }
 };
 
-document
-.getElementById("msg")
-.addEventListener(
-"keypress",
-function(e){
-
-if(e.key==="Enter"){
-
-window.sendMessage = async function(){
-
-alert("Send Button Working");
-
-const input =
-document.getElementById("msg");;
-
-}
-
-}
-);
-
-const q = query(
-collection(db,"privateMessages"),
-orderBy("time")
-);
-
-onSnapshot(q,(snapshot)=>{
-
-let html = "";
-
-snapshot.forEach((docSnap)=>{
-
-const data =
-docSnap.data();
-
-if(
-data.receiver===myUid &&
-data.sender===receiverUid &&
-data.seen===false
-){
-
-updateDoc(
-doc(db,"privateMessages",docSnap.id),
-{
-seen:true
-}
-);
-
-}
-if(
-
-(data.sender===myUid &&
-data.receiver===receiverUid)
-
-||
-
-(data.sender===receiverUid &&
-data.receiver===myUid)
-
-){
-
-const mine =
-data.sender===myUid;
-
-const msgTime =
-new Date(data.time)
-.toLocaleTimeString([],{
-hour:"2-digit",
-minute:"2-digit"
+// Enter Key Press Event Listener (FIXED)
+document.getElementById("msg").addEventListener("keypress", function(e){
+    if(e.key === "Enter"){
+        window.sendMessage(); // Sirf function ko call kiya
+    }
 });
 
-html += `
+// Chats Read Karne Ka Function
+const q = query(collection(db, "privateMessages"), orderBy("time"));
 
-<div class="${
-mine
-?
-'myMessage'
-:
-'otherMessage'
-}">
-${data.text}<div class="time">
-${msgTime}
-<br>
-${mine ? (data.seen ? '✓✓ Seen' : '✓ Sent') : ''}
-</div></div>`;
+onSnapshot(q, (snapshot) => {
+    let html = "";
+    snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
 
-}
+        // Seen Status Update logic
+        if(data.receiver === myUid && data.sender === receiverUid && data.seen === false){
+            updateDoc(doc(db, "privateMessages", docSnap.id), { seen: true });
+        }
 
+        // Message render logic
+        if((data.sender === myUid && data.receiver === receiverUid) || (data.sender === receiverUid && data.receiver === myUid)){
+            const mine = data.sender === myUid;
+            const msgTime = new Date(data.time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+            html += `
+                <div class="${mine ? 'myMessage' : 'otherMessage'}">
+                    ${data.text}
+                    <div class="time">
+                        ${msgTime} <br>
+                        ${mine ? (data.seen ? '✓✓ Seen' : '✓ Sent') : ''}
+                    </div>
+                </div>`;
+        }
+    });
+
+    const msgBox = document.getElementById("messages");
+    msgBox.innerHTML = html;
+    msgBox.scrollTop = msgBox.scrollHeight; // Auto-scroll to bottom
 });
 
-document.getElementById("messages").innerHTML =
-html;
+// Har 10 second mein status check karein
+setInterval(loadStatus, 10000);
+</script>
 
-const msgBox =
-document.getElementById("messages");
-
-msgBox.scrollTop =
-msgBox.scrollHeight;
-
-});
-
-setInterval(
-loadStatus,
-10000
-);
-
-</script></body>
+</body>
 </html>
