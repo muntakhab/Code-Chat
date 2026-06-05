@@ -1,76 +1,96 @@
-<!DOCTYPE html><html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Search Users</title><style>
-body{
-background:#0f172a;
-color:white;
-font-family:Arial,sans-serif;
-padding:20px;
-}
+<title>Search Users</title>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+    body { background: #000000; color: #f5f5f5; font-family: -apple-system, sans-serif; min-height: 100vh; display: flex; justify-content: center; padding: 20px 10px; }
+    .search-container { width: 100%; max-width: 500px; }
+    .header-area { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+    .back-btn { background: transparent; border: none; color: white; cursor: pointer; }
+    .search-wrapper { position: relative; margin-bottom: 25px; }
+    .search-wrapper input { width: 100%; background: #262626; border: none; border-radius: 10px; padding: 12px 12px 12px 42px; color: white; font-size: 15px; outline: none; }
+    .search-wrapper i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #a8a8a8; width: 18px; }
+    #users { display: flex; flex-direction: column; gap: 14px; }
+    .user-card { background: #121212; border: 1px solid #262626; border-radius: 14px; padding: 16px; cursor: pointer; transition: 0.2s; }
+    .user-card:hover { background: #181818; }
+    .card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .avatar-placeholder { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; }
+    .user-bio { font-size: 13px; color: #dbdbdb; margin-bottom: 12px; text-align: left; }
+    .card-stats { display: flex; gap: 20px; border-top: 1px solid #1e1e1e; padding-top: 10px; font-size: 12px; color: #a8a8a8; }
+    .card-stats span { font-weight: 700; color: white; margin-right: 3px; }
+</style>
+</head>
+<body>
+<div class="search-container">
+    <div class="header-area">
+        <button class="back-btn" onclick="location.href='index.html'"><i data-lucide="arrow-left"></i></button>
+        <h2>Explore Users</h2>
+    </div>
+    <div class="search-wrapper">
+        <i data-lucide="search"></i>
+        <input id="search" placeholder="Search username..." oninput="searchFilterEngine()">
+    </div>
+    <div id="users"></div>
+</div>
 
-h2{
-text-align:center;
-margin-bottom:15px;
-}
-
-input{
-width:100%;
-padding:12px;
-border:none;
-border-radius:10px;
-margin-bottom:15px;
-}
-
-.user{
-background:#1e293b;
-padding:15px;
-margin-bottom:10px;
-border-radius:10px;
-cursor:pointer;
-}
-</style></head><body><h2>🔍 Search Users</h2><input id="search" placeholder="Search username..."><div id="users"></div><script type="module">
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-
-import {
-getFirestore,
-collection,
-getDocs
-}
-from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
-apiKey: "AIzaSyDgOaEVjw-L7O83Wj-N7j_XQYO8RuX4sQU",
-authDomain: "code-chat-a82d0.firebaseapp.com",
-projectId: "code-chat-a82d0",
-storageBucket: "code-chat-a82d0.firebasestorage.app",
-messagingSenderId: "863595576976",
-appId: "1:863595576976:web:61217f6961e3e3a5016215"
+    apiKey: "AIzaSyDgOaEVjw-L7O83Wj-N7j_XQYO8RuX4sQU",
+    authDomain: "code-chat-a82d0.firebaseapp.com",
+    projectId: "code-chat-a82d0",
+    storageBucket: "code-chat-a82d0.firebasestorage.app",
+    messagingSenderId: "863595576976",
+    appId: "1:863595576976:web:61217f6961e3e3a5016215"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const usersDiv = document.getElementById("users");
+async function fetchUsers() {
+    const snapshot = await getDocs(collection(db, "users"));
+    let html = "";
+    snapshot.forEach((doc) => {
+        const data = doc.data();
+        const bio = data.bio || "Hey there! I am using CodeChat. 🚀";
+        const followers = data.followersCount || "1.2K";
+        const following = data.followingCount || "340";
+        const initial = data.username ? data.username.charAt(0).toUpperCase() : "U";
 
-const snapshot =
-await getDocs(collection(db,"users"));
+        html += `
+        <div class="user-card" onclick="location.href='privatechat.html?user=${data.username}&uid=${data.uid}'">
+            <div class="card-top">
+                <div class="avatar-placeholder">${initial}</div>
+                <div>
+                    <h3 style="font-size:15px; font-weight:600;">${data.username}</h3>
+                    <p style="font-size:12px; color:#a8a8a8;">@${data.username.toLowerCase()}</p>
+                </div>
+            </div>
+            <div class="user-bio">${bio}</div>
+            <div class="card-stats">
+                <div><span>${followers}</span>followers</div>
+                <div><span>${following}</span>following</div>
+            </div>
+        </div>`;
+    });
+    document.getElementById("users").innerHTML = html;
+}
 
-snapshot.forEach((doc)=>{
+window.searchFilterEngine = function() {
+    const query = document.getElementById("search").value.toUpperCase();
+    document.querySelectorAll(".user-card").forEach(card => {
+        const name = card.querySelector("h3").innerText;
+        card.style.display = name.toUpperCase().includes(query) ? "block" : "none";
+    });
+};
 
-const data = doc.data();
-
-usersDiv.innerHTML += `
-<div class="user"
-onclick="location.href='privatechat.html?user=${data.username}&uid=${data.uid}'">
-👤 ${data.username}
-</div>
-`;
-
-});
-
-</script></body>
+lucide.createIcons();
+fetchUsers();
+</script>
+</body>
 </html>
