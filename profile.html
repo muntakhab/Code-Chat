@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Profile - CodeChat</title>
-<!-- Lucide Icons Dependency -->
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
 :root {
@@ -16,156 +15,49 @@
     --text-pure: #f5f5f5;
     --text-muted: #a8a8a8;
 }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+body { background: var(--bg-black); color: var(--text-pure); min-height: 100vh; display: flex; justify-content: center; padding: 0 10px; }
 
-* {
-    margin: 0; padding: 0; box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-}
+.profile-wrapper { width: 100%; max-width: 480px; padding: 24px 10px; display: flex; flex-direction: column; }
+.profile-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; }
+.back-btn { background: transparent; border: none; color: white; cursor: pointer; }
+.profile-header h2 { font-size: 20px; font-weight: 700; }
 
-body {
-    background: var(--bg-black);
-    color: var(--text-pure);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    padding: 0 10px;
-}
+.account-overview { display: flex; align-items: center; gap: 25px; margin-bottom: 20px; }
+.avatar-container { position: relative; width: 86px; height: 86px; }
+.avatar-large { width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, #4f46e5, #06b6d4); display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; color: white; object-fit: cover; border: 2px solid var(--border-gray); }
 
-/* PROFILE SCREEN HOLDER */
-.profile-wrapper {
-    width: 100%;
-    max-width: 480px;
-    padding: 24px 10px;
-    display: flex;
-    flex-direction: column;
-}
+.stats-counter-grid { flex: 1; display: flex; justify-content: space-around; text-align: center; }
+.stat-box data { font-size: 18px; font-weight: 700; color: white; display: block; }
+.stat-box span { font-size: 12px; color: var(--text-muted); }
 
-/* HEADER SECTION */
-.profile-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 25px;
-}
-.back-btn {
-    background: transparent; border: none; color: white; cursor: pointer;
-}
-.profile-header h2 {
-    font-size: 20px;
-    font-weight: 700;
-}
+.user-details-section { margin-bottom: 20px; text-align: left; }
+.user-details-section h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+.user-email { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+.bio-text { font-size: 14px; color: #dbdbdb; line-height: 1.4; white-space: pre-line; }
 
-/* TOP ACCOUNT OVERVIEW */
-.account-overview {
-    display: flex;
-    align-items: center;
-    gap: 25px;
-    margin-bottom: 20px;
-}
+.bio-edit-container { display: none; margin-top: 10px; flex-direction: column; gap: 10px; }
+.bio-edit-container textarea, .bio-edit-container input { background: var(--surface-dark); border: 1px solid var(--border-gray); border-radius: 8px; padding: 10px; color: white; font-size: 14px; outline: none; }
 
-.avatar-large {
-    width: 86px; height: 86px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #4f46e5, #06b6d4);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 32px; font-weight: 700; color: white;
-    box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
-}
-
-/* METRICS / STATS COUNTER */
-.stats-counter-grid {
-    flex: 1;
-    display: flex;
-    justify-content: space-around;
-    text-align: center;
-}
-.stat-box data {
-    font-size: 18px;
-    font-weight: 700;
-    color: white;
-    display: block;
-}
-.stat-box span {
-    font-size: 12px;
-    color: var(--text-muted);
-}
-
-/* BIO & INFORMATION AREA */
-.user-details-section {
-    margin-bottom: 20px;
-    text-align: left;
-}
-.user-details-section h3 {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 4px;
-}
-.user-email {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-bottom: 8px;
-}
-.bio-text {
-    font-size: 14px;
-    color: #dbdbdb;
-    line-height: 1.4;
-    white-space: pre-line;
-}
-
-/* DYNAMIC BIO EDIT CORES */
-.bio-edit-container {
-    display: none;
-    margin-top: 10px;
-    flex-direction: column;
-    gap: 10px;
-}
-.bio-edit-container textarea {
-    background: var(--surface-dark);
-    border: 1px solid var(--border-gray);
-    border-radius: 8px;
-    padding: 10px;
-    color: white;
-    font-size: 14px;
-    resize: none;
-    outline: none;
-}
-
-/* INTERACTION ACTION BUTTONS */
-.action-buttons-group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-.btn-primary {
-    width: 100%; padding: 11px; border: none; border-radius: 10px;
-    background: var(--ig-blue); color: white; font-size: 14px;
-    font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-}
-.btn-secondary {
-    width: 100%; padding: 11px; border: 1px solid var(--border-gray); border-radius: 10px;
-    background: var(--btn-gray); color: white; font-size: 14px;
-    font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-}
-.btn-save {
-    background: #00f59b; color: #000;
-}
+.action-buttons-group { display: flex; flex-direction: column; gap: 10px; }
+.btn-primary { width: 100%; padding: 11px; border: none; border-radius: 10px; background: var(--ig-blue); color: white; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-secondary { width: 100%; padding: 11px; border: 1px solid var(--border-gray); border-radius: 10px; background: var(--btn-gray); color: white; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-save { background: #00f59b; color: #000; }
 </style>
 </head>
 <body>
 
 <div class="profile-wrapper">
-    
-    <!-- Top Header Navigation -->
     <header class="profile-header">
-        <button class="back-btn" onclick="location.href='index.html'"><i data-lucide="arrow-left"></i></button>
+        <button class="back-btn" onclick="location.href='search.html'"><i data-lucide="arrow-left"></i></button>
         <h2 id="topNavUsername">profile</h2>
-        <div style="width:24px;"></div> <!-- Structure Balance Spacer -->
+        <div style="width:24px;"></div>
     </header>
 
-    <!-- Main Account Matrix Overview -->
     <section class="account-overview">
-        <div class="avatar-large" id="profileAvatar">U</div>
-        
+        <div class="avatar-container" id="avatarHolder">
+            <div class="avatar-large" id="profileAvatar">U</div>
+        </div>
         <div class="stats-counter-grid">
             <div class="stat-box"><data id="countPosts">12</data><span>Posts</span></div>
             <div class="stat-box"><data id="countFollowers">1.4K</data><span>Followers</span></div>
@@ -173,48 +65,59 @@ body {
         </div>
     </section>
 
-    <!-- User Information & Saved Bio -->
     <section class="user-details-section">
         <h3 id="displayUsername">Loading...</h3>
         <div class="user-email" id="displayEmail">📧 loading...</div>
-        <p class="bio-text" id="displayBio">Click 'Edit Bio' to add your custom style profile bio description text here! ✨</p>
+        <p class="bio-text" id="displayBio">Click 'Edit Profile' to customize your bio! ✨</p>
         
-        <!-- Hidden Bio Editor Fields -->
         <div class="bio-edit-container" id="bioEditBox">
+            <input id="avatarUrlInput" placeholder="Paste Image URL (e.g. https://.../pic.jpg)">
             <textarea id="bioInput" rows="3" placeholder="Write something cool about yourself..."></textarea>
-            <button class="btn-primary btn-save" onclick="saveBioDescription()">Save Bio</button>
+            <button class="btn-primary btn-save" onclick="saveProfileData()">Save Profile</button>
         </div>
     </section>
 
-    <!-- Navigation & Setting Operations -->
     <footer class="action-buttons-group">
-        <button class="btn-secondary" onclick="toggleBioEditor()"><i data-lucide="edit-3" style="width:16px;"></i> Edit Bio</button>
-        <button class="btn-primary" onclick="location.href='index.html'"><i data-lucide="message-circle" style="width:16px;"></i> Back to Messages</button>
+        <button class="btn-secondary" onclick="toggleBioEditor()"><i data-lucide="edit-3" style="width:16px;"></i> Edit Profile</button>
+        <button class="btn-primary" onclick="location.href='search.html'"><i data-lucide="message-circle" style="width:16px;"></i> Back to Messages</button>
     </footer>
-
 </div>
 
 <script>
-// Initialize Icons
 lucide.createIcons();
 
-// Extraction engine from LocalStorage
 const userEmail = localStorage.getItem("email") || "user@codechat.com";
 const calculatedUsername = userEmail.split("@")[0];
 let currentSavedBio = localStorage.getItem("userBio") || "Hey there! I am using CodeChat. 🚀";
+let currentSavedAvatar = localStorage.getItem("userAvatar") || "";
 
-// Inject dynamic profile components on runtime load
 document.getElementById("displayEmail").innerHTML = `📧 ${userEmail}`;
 document.getElementById("displayUsername").innerText = calculatedUsername;
 document.getElementById("topNavUsername").innerText = calculatedUsername.toLowerCase();
-document.getElementById("profileAvatar").innerText = calculatedUsername.charAt(0).toUpperCase();
+
+function renderAvatar() {
+    const avatarHolder = document.getElementById("avatarHolder");
+    if (currentSavedAvatar && currentSavedAvatar.trim() !== "") {
+        avatarHolder.innerHTML = `<img src="${currentSavedAvatar}" class="avatar-large" id="profileAvatar" onerror="resetAvatarImg()">`;
+    } else {
+        avatarHolder.innerHTML = `<div class="avatar-large" id="profileAvatar">${calculatedUsername.charAt(0).toUpperCase()}</div>`;
+    }
+}
+
+window.resetAvatarImg = function() {
+    localStorage.removeItem("userAvatar");
+    currentSavedAvatar = "";
+    renderAvatar();
+};
+
+renderAvatar();
 document.getElementById("displayBio").innerText = currentSavedBio;
 
-// Toggle Bio Input View Area
 window.toggleBioEditor = function() {
     const editBox = document.getElementById("bioEditBox");
     const bioText = document.getElementById("displayBio");
     const inputField = document.getElementById("bioInput");
+    const avatarField = document.getElementById("avatarUrlInput");
 
     if (editBox.style.display === "flex") {
         editBox.style.display = "none";
@@ -223,19 +126,25 @@ window.toggleBioEditor = function() {
         editBox.style.display = "flex";
         bioText.style.display = "none";
         inputField.value = currentSavedBio;
+        avatarField.value = currentSavedAvatar;
         inputField.focus();
     }
 };
 
-// Permanent Storage updates
-window.saveBioDescription = function() {
+window.saveProfileData = function() {
     const newBio = document.getElementById("bioInput").value.trim();
+    const newAvatar = document.getElementById("avatarUrlInput").value.trim();
+    
     if (newBio !== "") {
         currentSavedBio = newBio;
         localStorage.setItem("userBio", newBio);
         document.getElementById("displayBio").innerText = newBio;
     }
-    toggleBioEditor(); // Close input window fields
+    
+    currentSavedAvatar = newAvatar;
+    localStorage.setItem("userAvatar", newAvatar);
+    renderAvatar();
+    toggleBioEditor();
 };
 </script>
 </body>
