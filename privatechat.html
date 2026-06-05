@@ -3,33 +3,65 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CodeChat - Fixed</title>
+<title>Instagram Chat</title>
+<script src="https://unpkg.com/lucide@latest"></script>
 <style>
-    body { background:#0f172a; color:white; font-family:Arial, sans-serif; padding:20px; }
-    #messages { background:#1e293b; padding:15px; border-radius:10px; min-height:200px; max-height:400px; overflow-y:auto; margin-bottom:15px; }
-    button { padding:10px 15px; border-radius:8px; border:none; background:#2563eb; color:white; cursor:pointer; margin-right:5px; }
-    .nav-btn { background:#475569; }
-    input { padding:10px; width:70%; border-radius:8px; border:none; outline:none; color:black; }
-    p { margin:5px 0; padding:8px; background:#334155; border-radius:6px; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+    body { background: #000000; color: white; height: 100vh; display: flex; justify-content: center; }
+    .chat-container { width: 100%; max-width: 600px; height: 100vh; background: #000000; display: flex; flex-direction: column; border-left: 1px solid #262626; border-right: 1px solid #262626; position: relative; }
+    .chat-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid #262626; background: #000000; z-index: 10; }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .back-btn { background: transparent; border: none; color: white; cursor: pointer; display: flex; align-items: center; }
+    .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: #262626; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; border: 1px solid #363636; }
+    .user-name { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; }
+    .header-right { display: flex; align-items: center; gap: 18px; color: #ffffff; }
+    .options-modal { display: none; position: absolute; top: 60px; right: 16px; background: #262626; border-radius: 12px; padding: 4px; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.5); flex-direction: column; }
+    .modal-row { background: transparent; border: none; color: white; padding: 10px 16px; font-size: 14px; font-weight: 600; cursor: pointer; width: 100%; text-align: left; }
+    .row-danger { color: #ed4956; }
+    .block-banner { display: none; background: #121212; color: #8e8e8e; text-align: center; padding: 12px; font-size: 13px; border-bottom: 1px solid #262626; }
+    #messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 8px; background: #000000; }
+    .msg-row { display: flex; width: 100%; margin: 2px 0; }
+    .msg-mine { justify-content: flex-end; }
+    .msg-other { justify-content: flex-start; }
+    .bubble { max-width: 70%; padding: 10px 16px; font-size: 14px; line-height: 1.4; word-wrap: break-word; display: inline-block; }
+    .msg-mine .bubble { background: #3797f0; color: white; border-radius: 18px 18px 4px 18px; text-align: right; }
+    .msg-other .bubble { background: #262626; color: white; border-radius: 18px 18px 18px 4px; text-align: left; }
+    .input-area { padding: 12px 16px; background: #000000; }
+    .input-pill { display: flex; align-items: center; background: #000000; border: 1px solid #363636; border-radius: 24px; padding: 4px 16px; gap: 12px; min-height: 44px; }
+    .input-pill input { flex: 1; background: transparent; border: none; color: white; font-size: 14px; outline: none; padding: 8px 0; }
+    .input-pill input::placeholder { color: #727272; }
+    .send-btn { background: transparent; border: none; color: #3797f0; font-weight: 600; font-size: 14px; cursor: pointer; display: none; padding-left: 8px; }
 </style>
 </head>
 <body>
 
-<h1>💬 CodeChat</h1>
+<div class="chat-container">
+    <header class="chat-header">
+        <div class="header-left">
+            <button class="back-btn" onclick="location.href='search.html'"><i data-lucide="arrow-left"></i></button>
+            <div class="user-avatar" id="avatarCircle">U</div>
+            <div class="user-name" id="chatTitle">Username</div>
+        </div>
+        <div class="header-right">
+            <i data-lucide="more-horizontal" onclick="toggleMenu()" style="width:24px; cursor:pointer;"></i>
+        </div>
+    </header>
 
-   <div style="margin-bottom: 15px;">
-    <button class="nav-btn" onclick="location.href='search.html'">🔍 Search</button>
-    <button class="nav-btn" onclick="location.href='profile.html'">👤 Profile</button>
-    <button class="nav-btn" onclick="location.href='settings.html'">⚙️ Settings</button>
-</div>
+    <div class="options-modal" id="optionsMenu">
+        <button class="modal-row row-danger" id="blockBtn" onclick="triggerBlock()">Block User</button>
+    </div>
 
-<hr style="border-color:#334155; margin-bottom:15px;">
+    <div class="block-banner" id="blockBanner">You have blocked this user.</div>
 
-<div id="messages"></div>
+    <div id="messages"></div>
 
-<div style="display: flex; gap: 10px;">
-    <input id="msg" placeholder="Type message...">
-    <button onclick="sendMyMessage()">Send</button>
+    <footer class="input-area">
+        <div class="input-pill">
+            <i data-lucide="smile" style="color:#a8a8a8; width:22px; cursor:pointer;"></i>
+            <input id="msg" placeholder="Message..." autocomplete="off" oninput="toggleSendBtn()">
+            <button class="send-btn" id="sendBtn" onclick="sendMyMessage()">Send</button>
+        </div>
+    </footer>
 </div>
 
 <script type="module">
@@ -44,10 +76,38 @@ const firebaseConfig = {
     messagingSenderId: "863595576976",
     appId: "1:863595576976:web:61217f6961e3e3a5016215"
 };
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+const urlParams = new URLSearchParams(window.location.search);
+const targetUser = urlParams.get('user') || "User";
+document.getElementById("chatTitle").innerText = targetUser;
+document.getElementById("avatarCircle").innerText = targetUser.charAt(0).toUpperCase();
+
+const mySessionId = "sender_current_user"; 
+let isBlocked = false;
+
+window.toggleMenu = function() {
+    const m = document.getElementById("optionsMenu");
+    m.style.display = m.style.display === "flex" ? "none" : "flex";
+}
+
+window.triggerBlock = function() {
+    isBlocked = !isBlocked;
+    document.getElementById("optionsMenu").style.display = "none";
+    document.getElementById("msg").disabled = isBlocked;
+    document.getElementById("blockBanner").style.display = isBlocked ? "block" : "none";
+    document.getElementById("blockBtn").innerText = isBlocked ? "Unblock User" : "Block User";
+}
+
+window.toggleSendBtn = function() {
+    const text = document.getElementById("msg").value.trim();
+    document.getElementById("sendBtn").style.display = text ? "block" : "none";
+}
+
 window.sendMyMessage = async function() {
+    if(isBlocked) return;
     const inputElement = document.getElementById("msg");
     const text = inputElement.value.trim();
     if(!text) return;
@@ -55,9 +115,11 @@ window.sendMyMessage = async function() {
     try {
         await addDoc(collection(db, "messages"), {
             text: text,
+            senderId: mySessionId,
             time: Date.now()
         });
         inputElement.value = "";
+        window.toggleSendBtn();
     } catch (error) {
         console.error("Error sending message: ", error);
     }
@@ -67,13 +129,18 @@ const q = query(collection(db, "messages"), orderBy("time", "asc"));
 onSnapshot(q, (snapshot) => {
     let html = "";
     snapshot.forEach((doc) => {
-        html += `<p>${doc.data().text}</p>`;
+        const data = doc.data();
+        const mine = data.senderId === mySessionId;
+        html += `<div class="msg-row ${mine ? 'msg-mine' : 'msg-other'}">
+            <div class="bubble">${data.text}</div>
+        </div>`;
     });
     const msgDiv = document.getElementById("messages");
     msgDiv.innerHTML = html;
     msgDiv.scrollTop = msgDiv.scrollHeight;
 });
-</script>
 
+lucide.createIcons();
+</script>
 </body>
 </html>
