@@ -1,75 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Profile</title><style>
-body{
-background:#0f172a;
-color:white;
-font-family:Arial,sans-serif;
-margin:0;
-padding:20px;
-text-align:center;
+<title>My Profile - CodeChat</title>
+<!-- Lucide Icons Dependency -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+:root {
+    --bg-black: #000000;
+    --surface-dark: #121212;
+    --border-gray: #262626;
+    --ig-blue: #0095f6;
+    --btn-gray: #363636;
+    --text-pure: #f5f5f5;
+    --text-muted: #a8a8a8;
 }
 
-.profile-card{
-background:#1e293b;
-padding:25px;
-border-radius:15px;
-max-width:400px;
-margin:auto;
-margin-top:40px;
+* {
+    margin: 0; padding: 0; box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-.avatar{
-width:100px;
-height:100px;
-border-radius:50%;
-background:#2563eb;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:40px;
-margin:auto;
-margin-bottom:20px;
+body {
+    background: var(--bg-black);
+    color: var(--text-pure);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 0 10px;
 }
 
-.info{
-background:#0f172a;
-padding:12px;
-border-radius:10px;
-margin-top:10px;
+/* PROFILE SCREEN HOLDER */
+.profile-wrapper {
+    width: 100%;
+    max-width: 480px;
+    padding: 24px 10px;
+    display: flex;
+    flex-direction: column;
 }
 
-button{
-width:100%;
-padding:12px;
-margin-top:15px;
-border:none;
-border-radius:10px;
-background:#2563eb;
-color:white;
-font-size:16px;
-cursor:pointer;
+/* HEADER SECTION */
+.profile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
 }
-</style></head><body><div class="profile-card"><div class="avatar">
-👤
-</div><h2 id="username">Loading...</h2><div class="info" id="email">
-Loading Email...
-</div><button onclick="location.href='chat.html'">
-💬 Back To Chat
-</button></div><script>
+.back-btn {
+    background: transparent; border: none; color: white; cursor: pointer;
+}
+.profile-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+}
 
-const email =
-localStorage.getItem("email") || "Not Found";
+/* TOP ACCOUNT OVERVIEW */
+.account-overview {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 20px;
+}
 
-document.getElementById("email").innerHTML =
-"📧 " + email;
+.avatar-large {
+    width: 86px; height: 86px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4f46e5, #06b6d4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; font-weight: 700; color: white;
+    box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+}
 
-const username =
-email.split("@")[0];
+/* METRICS / STATS COUNTER */
+.stats-counter-grid {
+    flex: 1;
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+}
+.stat-box data {
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    display: block;
+}
+.stat-box span {
+    font-size: 12px;
+    color: var(--text-muted);
+}
 
-document.getElementById("username").innerHTML =
-username;
+/* BIO & INFORMATION AREA */
+.user-details-section {
+    margin-bottom: 20px;
+    text-align: left;
+}
+.user-details-section h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+.user-email {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+.bio-text {
+    font-size: 14px;
+    color: #dbdbdb;
+    line-height: 1.4;
+    white-space: pre-line;
+}
 
-</script></body>
+/* DYNAMIC BIO EDIT CORES */
+.bio-edit-container {
+    display: none;
+    margin-top: 10px;
+    flex-direction: column;
+    gap: 10px;
+}
+.bio-edit-container textarea {
+    background: var(--surface-dark);
+    border: 1px solid var(--border-gray);
+    border-radius: 8px;
+    padding: 10px;
+    color: white;
+    font-size: 14px;
+    resize: none;
+    outline: none;
+}
+
+/* INTERACTION ACTION BUTTONS */
+.action-buttons-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.btn-primary {
+    width: 100%; padding: 11px; border: none; border-radius: 10px;
+    background: var(--ig-blue); color: white; font-size: 14px;
+    font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-secondary {
+    width: 100%; padding: 11px; border: 1px solid var(--border-gray); border-radius: 10px;
+    background: var(--btn-gray); color: white; font-size: 14px;
+    font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-save {
+    background: #00f59b; color: #000;
+}
+</style>
+</head>
+<body>
+
+<div class="profile-wrapper">
+    
+    <!-- Top Header Navigation -->
+    <header class="profile-header">
+        <button class="back-btn" onclick="location.href='index.html'"><i data-lucide="arrow-left"></i></button>
+        <h2 id="topNavUsername">profile</h2>
+        <div style="width:24px;"></div> <!-- Structure Balance Spacer -->
+    </header>
+
+    <!-- Main Account Matrix Overview -->
+    <section class="account-overview">
+        <div class="avatar-large" id="profileAvatar">U</div>
+        
+        <div class="stats-counter-grid">
+            <div class="stat-box"><data id="countPosts">12</data><span>Posts</span></div>
+            <div class="stat-box"><data id="countFollowers">1.4K</data><span>Followers</span></div>
+            <div class="stat-box"><data id="countFollowing">382</data><span>Following</span></div>
+        </div>
+    </section>
+
+    <!-- User Information & Saved Bio -->
+    <section class="user-details-section">
+        <h3 id="displayUsername">Loading...</h3>
+        <div class="user-email" id="displayEmail">📧 loading...</div>
+        <p class="bio-text" id="displayBio">Click 'Edit Bio' to add your custom style profile bio description text here! ✨</p>
+        
+        <!-- Hidden Bio Editor Fields -->
+        <div class="bio-edit-container" id="bioEditBox">
+            <textarea id="bioInput" rows="3" placeholder="Write something cool about yourself..."></textarea>
+            <button class="btn-primary btn-save" onclick="saveBioDescription()">Save Bio</button>
+        </div>
+    </section>
+
+    <!-- Navigation & Setting Operations -->
+    <footer class="action-buttons-group">
+        <button class="btn-secondary" onclick="toggleBioEditor()"><i data-lucide="edit-3" style="width:16px;"></i> Edit Bio</button>
+        <button class="btn-primary" onclick="location.href='index.html'"><i data-lucide="message-circle" style="width:16px;"></i> Back to Messages</button>
+    </footer>
+
+</div>
+
+<script>
+// Initialize Icons
+lucide.createIcons();
+
+// Extraction engine from LocalStorage
+const userEmail = localStorage.getItem("email") || "user@codechat.com";
+const calculatedUsername = userEmail.split("@")[0];
+let currentSavedBio = localStorage.getItem("userBio") || "Hey there! I am using CodeChat. 🚀";
+
+// Inject dynamic profile components on runtime load
+document.getElementById("displayEmail").innerHTML = `📧 ${userEmail}`;
+document.getElementById("displayUsername").innerText = calculatedUsername;
+document.getElementById("topNavUsername").innerText = calculatedUsername.toLowerCase();
+document.getElementById("profileAvatar").innerText = calculatedUsername.charAt(0).toUpperCase();
+document.getElementById("displayBio").innerText = currentSavedBio;
+
+// Toggle Bio Input View Area
+window.toggleBioEditor = function() {
+    const editBox = document.getElementById("bioEditBox");
+    const bioText = document.getElementById("displayBio");
+    const inputField = document.getElementById("bioInput");
+
+    if (editBox.style.display === "flex") {
+        editBox.style.display = "none";
+        bioText.style.display = "block";
+    } else {
+        editBox.style.display = "flex";
+        bioText.style.display = "none";
+        inputField.value = currentSavedBio;
+        inputField.focus();
+    }
+};
+
+// Permanent Storage updates
+window.saveBioDescription = function() {
+    const newBio = document.getElementById("bioInput").value.trim();
+    if (newBio !== "") {
+        currentSavedBio = newBio;
+        localStorage.setItem("userBio", newBio);
+        document.getElementById("displayBio").innerText = newBio;
+    }
+    toggleBioEditor(); // Close input window fields
+};
+</script>
+</body>
 </html>
