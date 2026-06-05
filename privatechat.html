@@ -3,70 +3,77 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Instagram Chat</title>
+<title>Chat - CodeChat</title>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-    body { background: #000000; color: white; height: 100vh; display: flex; justify-content: center; }
-    .chat-container { width: 100%; max-width: 600px; height: 100vh; background: #000000; display: flex; flex-direction: column; border-left: 1px solid #262626; border-right: 1px solid #262626; position: relative; }
-    .chat-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid #262626; background: #000000; z-index: 10; }
-    .header-left { display: flex; align-items: center; gap: 12px; }
-    .back-btn { background: transparent; border: none; color: white; cursor: pointer; display: flex; align-items: center; }
-    .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: #262626; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; border: 1px solid #363636; }
-    .user-name { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; }
-    .header-right { display: flex; align-items: center; gap: 18px; color: #ffffff; }
-    .options-modal { display: none; position: absolute; top: 60px; right: 16px; background: #262626; border-radius: 12px; padding: 4px; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.5); flex-direction: column; }
-    .modal-row { background: transparent; border: none; color: white; padding: 10px 16px; font-size: 14px; font-weight: 600; cursor: pointer; width: 100%; text-align: left; }
-    .row-danger { color: #ed4956; }
-    .block-banner { display: none; background: #121212; color: #8e8e8e; text-align: center; padding: 12px; font-size: 13px; border-bottom: 1px solid #262626; }
-    #messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 8px; background: #000000; }
-    .msg-row { display: flex; width: 100%; margin: 2px 0; }
-    .msg-mine { justify-content: flex-end; }
-    .msg-other { justify-content: flex-start; }
-    .bubble { max-width: 70%; padding: 10px 16px; font-size: 14px; line-height: 1.4; word-wrap: break-word; display: inline-block; }
-    .msg-mine .bubble { background: #3797f0; color: white; border-radius: 18px 18px 4px 18px; text-align: right; }
-    .msg-other .bubble { background: #262626; color: white; border-radius: 18px 18px 18px 4px; text-align: left; }
-    .input-area { padding: 12px 16px; background: #000000; }
-    .input-pill { display: flex; align-items: center; background: #000000; border: 1px solid #363636; border-radius: 24px; padding: 4px 16px; gap: 12px; min-height: 44px; }
-    .input-pill input { flex: 1; background: transparent; border: none; color: white; font-size: 14px; outline: none; padding: 8px 0; }
-    .input-pill input::placeholder { color: #727272; }
-    .send-btn { background: transparent; border: none; color: #3797f0; font-weight: 600; font-size: 14px; cursor: pointer; display: none; padding-left: 8px; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; }
+    body { background: #000000; color: #ffffff; height: 100vh; display: flex; justify-content: center; }
+    .chat-container { width: 100%; max-width: 600px; background: #000000; display: flex; flex-direction: column; height: 100vh; border-left: 1px solid #262626; border-right: 1px solid #262626; }
+    
+    /* Instagram Style Chat Header */
+    .chat-header { display: flex; align-items: center; padding: 14px 16px; border-bottom: 1px solid #262626; justify-content: space-between; }
+    .header-left { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+    .back-btn { background: transparent; border: none; color: white; cursor: pointer; }
+    .avatar-circle { width: 40px; height: 40px; border-radius: 50%; background: #262626; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; overflow: hidden; object-fit: cover; }
+    .user-info h3 { font-size: 15px; font-weight: 600; }
+    .user-info span { font-size: 12px; color: #8e8e8e; }
+    .header-icons { display: flex; gap: 18px; color: #ffffff; }
+    .header-icons i { cursor: pointer; width: 22px; }
+
+    /* Message Area */
+    .messages-box { flex: 1; overflow-y: auto; padding: 20px 16px; display: flex; flex-direction: column; gap: 12px; }
+    .msg-wrapper { display: flex; align-items: flex-end; gap: 8px; max-width: 75%; }
+    .msg-wrapper.sent { align-self: flex-end; flex-direction: row-reverse; }
+    .msg-wrapper.received { align-self: flex-start; }
+    
+    .chat-avatar { width: 28px; height: 28px; border-radius: 50%; background: #363636; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; overflow: hidden; object-fit: cover; }
+    .bubble { padding: 10px 16px; border-radius: 20px; font-size: 14px; line-height: 1.4; word-break: break-word; }
+    .sent .bubble { background: #3797f0; color: #ffffff; border-bottom-right-radius: 4px; }
+    .received .bubble { background: #262626; color: #ffffff; border-bottom-left-radius: 4px; }
+
+    /* Input Dock */
+    .input-footer { padding: 12px 16px; display: flex; align-items: center; }
+    .input-wrapper { width: 100%; background: #121212; border: 1px solid #262626; border-radius: 24px; padding: 8px 16px; display: flex; align-items: center; gap: 12px; }
+    .input-wrapper input { flex: 1; background: transparent; border: none; color: white; font-size: 14px; outline: none; }
+    .send-btn { background: transparent; border: none; color: #0095f6; font-weight: 600; font-size: 14px; cursor: pointer; display: none; }
 </style>
 </head>
 <body>
 
 <div class="chat-container">
+    <!-- Header -->
     <header class="chat-header">
-        <div class="header-left">
-            <button class="back-btn" onclick="location.href='search.html'"><i data-lucide="arrow-left"></i></button>
-            <div class="user-avatar" id="avatarCircle">U</div>
-            <div class="user-name" id="chatTitle">Username</div>
+        <div class="header-left" onclick="location.href='search.html'">
+            <button class="back-btn"><i data-lucide="arrow-left"></i></button>
+            <div class="avatar-circle" id="targetAvatar">U</div>
+            <div class="user-info">
+                <h3 id="targetUsername">username</h3>
+                <span>Active now</span>
+            </div>
         </div>
-        <div class="header-right">
-            <i data-lucide="more-horizontal" onclick="toggleMenu()" style="width:24px; cursor:pointer;"></i>
+        <div class="header-icons">
+            <i data-lucide="phone" onclick="alert('Calling...')"></i>
+            <i data-lucide="video" onclick="alert('Starting Video Call...')"></i>
+            <i data-lucide="info" onclick="alert('User Blocked!')"></i>
         </div>
     </header>
 
-    <div class="options-modal" id="optionsMenu">
-        <button class="modal-row row-danger" id="blockBtn" onclick="triggerBlock()">Block User</button>
-    </div>
+    <!-- Messages -->
+    <div class="messages-box" id="chatBox"></div>
 
-    <div class="block-banner" id="blockBanner">You have blocked this user.</div>
-
-    <div id="messages"></div>
-
-    <footer class="input-area">
-        <div class="input-pill">
-            <i data-lucide="smile" style="color:#a8a8a8; width:22px; cursor:pointer;"></i>
-            <input id="msg" placeholder="Message..." autocomplete="off" oninput="toggleSendBtn()">
-            <button class="send-btn" id="sendBtn" onclick="sendMyMessage()">Send</button>
+    <!-- Input Footer -->
+    <footer class="input-footer">
+        <div class="input-wrapper">
+            <i data-lucide="smile" style="color: #8e8e8e; width: 22px;"></i>
+            <input id="msgInput" placeholder="Message..." oninput="toggleSendBtn()">
+            <button id="sendBtn" class="send-btn" onclick="sendMessage()">Send</button>
         </div>
     </footer>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDgOaEVjw-L7O83Wj-N7j_XQYO8RuX4sQU",
@@ -80,67 +87,79 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// URL Extraction & Setup
 const urlParams = new URLSearchParams(window.location.search);
-const targetUser = urlParams.get('user') || "User";
-document.getElementById("chatTitle").innerText = targetUser;
-document.getElementById("avatarCircle").innerText = targetUser.charAt(0).toUpperCase();
+const targetUser = urlParams.get('user') || "Chat User";
+const targetUID = urlParams.get('uid') || "";
 
-const mySessionId = "sender_current_user"; 
-let isBlocked = false;
+const myEmail = localStorage.getItem("email") || "me@codechat.com";
+const myUsername = myEmail.split("@")[0];
+const myAvatar = localStorage.getItem("userAvatar") || "";
 
-window.toggleMenu = function() {
-    const m = document.getElementById("optionsMenu");
-    m.style.display = m.style.display === "flex" ? "none" : "flex";
-}
+document.getElementById("targetUsername").innerText = targetUser.toLowerCase();
 
-window.triggerBlock = function() {
-    isBlocked = !isBlocked;
-    document.getElementById("optionsMenu").style.display = "none";
-    document.getElementById("msg").disabled = isBlocked;
-    document.getElementById("blockBanner").style.display = isBlocked ? "block" : "none";
-    document.getElementById("blockBtn").innerText = isBlocked ? "Unblock User" : "Block User";
-}
+// Load Target User Profile Photo (Static placeholder or direct Firebase sync can expand this)
+// Right now it checks if we received any avatar info or shows initials
+document.getElementById("targetAvatar").innerText = targetUser.charAt(0).toUpperCase();
+
+const chatRoomId = [myUsername, targetUser].sort().join("_");
 
 window.toggleSendBtn = function() {
-    const text = document.getElementById("msg").value.trim();
-    document.getElementById("sendBtn").style.display = text ? "block" : "none";
-}
+    const input = document.getElementById("msgInput").value.trim();
+    document.getElementById("sendBtn").style.display = input.length > 0 ? "block" : "none";
+};
 
-window.sendMyMessage = async function() {
-    if(isBlocked) return;
-    const inputElement = document.getElementById("msg");
-    const text = inputElement.value.trim();
-    if(!text) return;
+window.sendMessage = async function() {
+    const inputField = document.getElementById("msgInput");
+    const text = inputField.value.trim();
+    if (!text) return;
+
+    inputField.value = "";
+    toggleSendBtn();
 
     try {
-        await addDoc(collection(db, "messages"), {
+        await addDoc(collection(db, "chats", chatRoomId, "messages"), {
+            sender: myUsername,
             text: text,
-            senderId: mySessionId,
-            time: Date.now()
+            avatar: myAvatar, // Saves your photo url inside the message structure
+            timestamp: new Date().getTime()
         });
-        inputElement.value = "";
-        window.toggleSendBtn();
-    } catch (error) {
-        console.error("Error sending message: ", error);
+    } catch (e) {
+        console.error("Message send failure: ", e);
     }
 };
 
-const q = query(collection(db, "messages"), orderBy("time", "asc"));
-onSnapshot(q, (snapshot) => {
-    let html = "";
-    snapshot.forEach((doc) => {
-        const data = doc.data();
-        const mine = data.senderId === mySessionId;
-        html += `<div class="msg-row ${mine ? 'msg-mine' : 'msg-other'}">
-            <div class="bubble">${data.text}</div>
-        </div>`;
+function listenMessages() {
+    const q = query(collection(db, "chats", chatRoomId, "messages"), orderBy("timestamp", "asc"));
+    onSnapshot(q, (snapshot) => {
+        let html = "";
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            const isMe = data.sender === myUsername;
+            const chatClass = isMe ? "sent" : "received";
+            
+            // Avatar display check inside chat bubble logic
+            let currentAvatarHtml = "";
+            if (isMe) {
+                currentAvatarHtml = myAvatar ? `<img src="${myAvatar}" class="chat-avatar">` : `<div class="chat-avatar">${myUsername.charAt(0).toUpperCase()}</div>`;
+            } else {
+                currentAvatarHtml = data.avatar ? `<img src="${data.avatar}" class="chat-avatar">` : `<div class="chat-avatar">${targetUser.charAt(0).toUpperCase()}</div>`;
+            }
+
+            html += `
+            <div class="msg-wrapper ${chatClass}">
+                ${currentAvatarHtml}
+                <div class="bubble">${data.text}</div>
+            </div>`;
+        });
+        const box = document.getElementById("chatBox");
+        box.innerHTML = html;
+        box.scrollTop = box.scrollHeight;
     });
-    const msgDiv = document.getElementById("messages");
-    msgDiv.innerHTML = html;
-    msgDiv.scrollTop = msgDiv.scrollHeight;
-});
+}
 
 lucide.createIcons();
+listenMessages();
 </script>
 </body>
 </html>
