@@ -1,6 +1,8 @@
-<!DOCTYPE html><html><head>
+<!DOCTYPE html><html>
+<head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>CodeChat Private Chat</title><style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodeChat Private Chat</title><style>
 
 *{
 margin:0;
@@ -21,9 +23,6 @@ flex-direction:column;
 background:#111827;
 padding:15px;
 border-bottom:1px solid #1f2937;
-position:sticky;
-top:0;
-z-index:100;
 }
 
 #user{
@@ -93,18 +92,17 @@ color:white;
 cursor:pointer;
 }
 
-</style></head><body><div class="header"><div id="user">
-Loading...
-</div><div class="status" id="status">
-Checking status...
-</div></div><div id="messages"></div><div class="input-area"><input
+</style></head><body><div class="header">
+<div id="user">Loading...</div>
+<div class="status" id="status">Checking status...</div>
+</div><div id="messages"></div><div class="input-area">
+<input
 id="msg"
 placeholder="Type message..."
-autocomplete="off"
-
-<button onclick="sendMessage()">
+autocomplete="off"><button onclick="sendMessage()">
 Send
-</button></div><script type="module">
+</button>
+</div><script type="module">
 
 import { initializeApp }
 from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
@@ -117,9 +115,8 @@ onSnapshot,
 query,
 orderBy,
 doc,
-getDoc, 
+getDoc,
 updateDoc
- 
 }
 from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
@@ -135,7 +132,6 @@ appId:"1:863595576976:web:61217f6961e3e3a5016215"
 };
 
 const app = initializeApp(firebaseConfig);
-
 const db = getFirestore(app);
 
 const params =
@@ -151,8 +147,7 @@ const myUid =
 localStorage.getItem("uid");
 
 document.getElementById("user").innerHTML =
-"💬 " + receiverName;
-  async function loadStatus(){
+"💬 " + receiverName;async function loadStatus(){
 
 try{
 
@@ -217,14 +212,14 @@ collection(db,"privateMessages"),
 sender: myUid,
 receiver: receiverUid,
 text: text,
-time: Date.now(), 
+time: Date.now(),
 seen:false
 }
 );
 
 input.value = "";
 
-}
+};
 
 document
 .getElementById("msg")
@@ -254,7 +249,21 @@ snapshot.forEach((docSnap)=>{
 
 const data =
 docSnap.data();
+
 if(
+data.receiver===myUid &&
+data.sender===receiverUid &&
+data.seen===false
+){
+
+updateDoc(
+doc(db,"privateMessages",docSnap.id),
+{
+seen:true
+}
+);
+
+}if(
 
 (data.sender===myUid &&
 data.receiver===receiverUid)
@@ -285,17 +294,17 @@ mine
 :
 'otherMessage'
 }">
-${data.text}
-<div class="time">
+${data.text}<div class="time">
 ${msgTime}
 <br>
 ${mine ? (data.seen ? '✓✓ Seen' : '✓ Sent') : ''}
-</div>
-</div>
-`;}
+</div></div>`;
+
+}
 
 });
-  document.getElementById("messages").innerHTML =
+
+document.getElementById("messages").innerHTML =
 html;
 
 const msgBox =
@@ -311,4 +320,5 @@ loadStatus,
 10000
 );
 
-</script></body></html>
+</script></body>
+</html>
