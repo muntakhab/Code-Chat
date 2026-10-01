@@ -1,168 +1,1145 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Profile - CodeChat</title>
-<script src="https://unpkg.com/lucide@latest"></script>
-<style>
-:root {
-    --bg-black: #000000;
-    --surface-dark: #121212;
-    --border-gray: #262626;
-    --ig-blue: #0095f6;
-    --btn-gray: #363636;
-    --text-pure: #f5f5f5;
-    --text-muted: #a8a8a8;
-}
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-body { background: var(--bg-black); color: var(--text-pure); min-height: 100vh; display: flex; justify-content: center; padding: 0 10px; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-.profile-wrapper { width: 100%; max-width: 480px; padding: 24px 10px; display: flex; flex-direction: column; }
-.profile-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; }
-.back-btn { background: transparent; border: none; color: white; cursor: pointer; }
-.profile-header h2 { font-size: 20px; font-weight: 700; }
+  <title>My Profile — CodeChat</title>
 
-.account-overview { display: flex; align-items: center; gap: 25px; margin-bottom: 20px; }
-.avatar-container { position: relative; width: 86px; height: 86px; cursor: pointer; }
-.avatar-large { width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, #4f46e5, #06b6d4); display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; color: white; object-fit: cover; border: 2px solid var(--border-gray); }
-.avatar-overlay { position: absolute; bottom: 0; right: 0; background: var(--ig-blue); border: 2px solid black; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; }
+  <script src="https://unpkg.com/lucide@latest"></script>
 
-.stats-counter-grid { flex: 1; display: flex; justify-content: space-around; text-align: center; }
-.stat-box data { font-size: 18px; font-weight: 700; color: white; display: block; }
-.stat-box span { font-size: 12px; color: var(--text-muted); }
+  <style>
+    :root {
+      --bg: #000;
+      --surface: #111;
+      --surface-2: #181818;
+      --border: #292929;
+      --primary: #0095f6;
+      --text: #f5f5f5;
+      --muted: #a8a8a8;
+    }
 
-.user-details-section { margin-bottom: 20px; text-align: left; }
-.user-details-section h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
-.user-email { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
-.bio-text { font-size: 14px; color: #dbdbdb; line-height: 1.4; white-space: pre-line; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+    }
 
-.bio-edit-container { display: none; margin-top: 10px; flex-direction: column; gap: 10px; }
-.bio-edit-container textarea { background: var(--surface-dark); border: 1px solid var(--border-gray); border-radius: 8px; padding: 10px; color: white; font-size: 14px; outline: none; resize: none; }
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+    }
 
-.action-buttons-group { display: flex; flex-direction: column; gap: 10px; }
-.btn-primary { width: 100%; padding: 11px; border: none; border-radius: 10px; background: var(--ig-blue); color: white; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-.btn-secondary { width: 100%; padding: 11px; border: 1px solid var(--border-gray); border-radius: 10px; background: var(--btn-gray); color: white; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-.btn-save { background: #00f59b; color: #000; }
-</style>
+    button {
+      font: inherit;
+    }
+
+    .profile-wrapper {
+      width: 100%;
+      max-width: 520px;
+      min-height: 100vh;
+      padding: 18px 16px 30px;
+    }
+
+    /* Header */
+
+    .profile-header {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .back-btn,
+    .header-btn {
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: transparent;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .back-btn:active,
+    .header-btn:active {
+      background: #1f1f1f;
+    }
+
+    .profile-header h2 {
+      font-size: 19px;
+      font-weight: 700;
+    }
+
+    /* Profile overview */
+
+    .account-overview {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 22px;
+    }
+
+    .avatar-container {
+      position: relative;
+      width: 88px;
+      height: 88px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .avatar-large {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      object-fit: cover;
+      background:
+        linear-gradient(135deg, #4f46e5, #06b6d4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: 700;
+      color: white;
+      border: 2px solid #333;
+    }
+
+    .avatar-overlay {
+      position: absolute;
+      right: -2px;
+      bottom: -2px;
+
+      width: 28px;
+      height: 28px;
+
+      border-radius: 50%;
+      background: var(--primary);
+      border: 3px solid black;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stats-counter-grid {
+      flex: 1;
+      display: flex;
+      justify-content: space-around;
+      text-align: center;
+    }
+
+    .stat-box {
+      min-width: 60px;
+    }
+
+    .stat-number {
+      display: block;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .stat-label {
+      display: block;
+      margin-top: 3px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* User information */
+
+    .user-details-section {
+      margin-bottom: 20px;
+    }
+
+    .display-name {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .username {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 9px;
+    }
+
+    .user-email {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      word-break: break-word;
+    }
+
+    .bio-text {
+      font-size: 14px;
+      color: #ddd;
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+    /* Edit profile */
+
+    .bio-edit-container {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .bio-edit-container textarea {
+      width: 100%;
+      min-height: 100px;
+      resize: vertical;
+
+      padding: 12px;
+
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      color: white;
+      outline: none;
+
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .bio-edit-container textarea:focus {
+      border-color: var(--primary);
+    }
+
+    /* Buttons */
+
+    .action-buttons-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 11px;
+
+      border-radius: 10px;
+
+      font-size: 14px;
+      font-weight: 600;
+
+      cursor: pointer;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+    }
+
+    .btn-secondary {
+      background: #262626;
+      border: 1px solid #333;
+      color: white;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      border: none;
+      color: white;
+    }
+
+    .btn-save {
+      background: #00d68f;
+      color: #000;
+      border: none;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Content tabs */
+
+    .profile-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+
+      margin-top: 5px;
+    }
+
+    .tab {
+      height: 48px;
+
+      border: none;
+      background: transparent;
+
+      color: var(--muted);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      cursor: pointer;
+    }
+
+    .tab.active {
+      color: white;
+    }
+
+    /* Loading */
+
+    .loading {
+      text-align: center;
+      color: var(--muted);
+      padding: 40px 10px;
+    }
+
+    .error {
+      text-align: center;
+      color: #ff6b6b;
+      padding: 30px 10px;
+    }
+
+    @media (max-width: 380px) {
+
+      .account-overview {
+        gap: 15px;
+      }
+
+      .avatar-container,
+      .avatar-large {
+        width: 76px;
+        height: 76px;
+      }
+
+      .avatar-large {
+        font-size: 27px;
+      }
+
+      .action-buttons-group {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
+
+
 <body>
 
-<div class="profile-wrapper">
+  <main class="profile-wrapper">
+
+    <!-- Header -->
+
     <header class="profile-header">
-        <button class="back-btn" onclick="location.href='search.html'"><i data-lucide="arrow-left"></i></button>
-        <h2 id="topNavUsername">profile</h2>
-        <div style="width:24px;"></div>
+
+      <button
+        class="back-btn"
+        onclick="history.back()"
+        aria-label="Go back"
+      >
+        <i data-lucide="arrow-left"></i>
+      </button>
+
+      <h2 id="topNavUsername">
+        Profile
+      </h2>
+
+      <button
+        class="header-btn"
+        onclick="location.href='settings.html'"
+        aria-label="Settings"
+      >
+        <i data-lucide="settings"></i>
+      </button>
+
     </header>
 
-    <section class="account-overview">
-        <div class="avatar-container" onclick="triggerProfilePicUpload()">
-            <div id="avatarHolder">
-                <div class="avatar-large" id="profileAvatar">U</div>
-            </div>
-            <div class="avatar-overlay">
-                <i data-lucide="camera" style="width:14px; color:white;"></i>
-            </div>
-        </div>
-        <input type="file" id="profileFileInput" accept="image/*" style="display: none;" onchange="uploadProfilePic(event)">
 
-        <div class="stats-counter-grid">
-            <div class="stat-box"><data id="countPosts">12</data><span>Posts</span></div>
-            <div class="stat-box"><data id="countFollowers">1.4K</data><span>Followers</span></div>
-            <div class="stat-box"><data id="countFollowing">382</data><span>Following</span></div>
+    <!-- Profile -->
+
+    <section class="account-overview">
+
+      <div
+        class="avatar-container"
+        onclick="triggerProfilePicUpload()"
+      >
+
+        <div id="avatarHolder">
+
+          <div
+            class="avatar-large"
+            id="profileAvatar"
+          >
+            U
+          </div>
+
         </div>
+
+        <div class="avatar-overlay">
+
+          <i
+            data-lucide="camera"
+            style="width:14px;"
+          ></i>
+
+        </div>
+
+      </div>
+
+
+      <input
+        type="file"
+        id="profileFileInput"
+        accept="image/*"
+        hidden
+      >
+
+
+      <div class="stats-counter-grid">
+
+        <div class="stat-box">
+
+          <span
+            class="stat-number"
+            id="countPosts"
+          >
+            0
+          </span>
+
+          <span class="stat-label">
+            Posts
+          </span>
+
+        </div>
+
+
+        <div class="stat-box">
+
+          <span
+            class="stat-number"
+            id="countFollowers"
+          >
+            0
+          </span>
+
+          <span class="stat-label">
+            Followers
+          </span>
+
+        </div>
+
+
+        <div class="stat-box">
+
+          <span
+            class="stat-number"
+            id="countFollowing"
+          >
+            0
+          </span>
+
+          <span class="stat-label">
+            Following
+          </span>
+
+        </div>
+
+      </div>
+
     </section>
+
+
+    <!-- User information -->
 
     <section class="user-details-section">
-        <h3 id="displayUsername">Loading...</h3>
-        <div class="user-email" id="displayEmail">📧 loading...</div>
-        <p class="bio-text" id="displayBio">Click 'Edit Profile' to customize your bio! ✨</p>
-        
-        <div class="bio-edit-container" id="bioEditBox">
-            <textarea id="bioInput" rows="3" placeholder="Write something cool about yourself..."></textarea>
-            <button class="btn-primary btn-save" onclick="saveProfileData()">Save Profile</button>
-        </div>
+
+      <h3
+        class="display-name"
+        id="displayName"
+      >
+        Loading...
+      </h3>
+
+      <div
+        class="username"
+        id="displayUsername"
+      >
+        @loading
+      </div>
+
+      <div
+        class="user-email"
+        id="displayEmail"
+      >
+        📧 Loading...
+      </div>
+
+      <p
+        class="bio-text"
+        id="displayBio"
+      >
+        Loading profile...
+      </p>
+
+
+      <div
+        class="bio-edit-container"
+        id="bioEditBox"
+      >
+
+        <textarea
+          id="bioInput"
+          maxlength="160"
+          placeholder="Write something about yourself..."
+        ></textarea>
+
+        <button
+          class="btn btn-save"
+          id="saveBioBtn"
+          onclick="saveProfileData()"
+        >
+          Save Profile
+        </button>
+
+      </div>
+
     </section>
 
-    <footer class="action-buttons-group">
-        <button class="btn-secondary" onclick="toggleBioEditor()"><i data-lucide="edit-3" style="width:16px;"></i> Edit Profile</button>
-        <button class="btn-primary" onclick="location.href='search.html'"><i data-lucide="message-circle" style="width:16px;"></i> Back to Messages</button>
-    </footer>
-</div>
 
-<script>
-lucide.createIcons();
+    <!-- Actions -->
 
-const userEmail = localStorage.getItem("email") || "user@codechat.com";
-const calculatedUsername = userEmail.split("@")[0];
-let currentSavedBio = localStorage.getItem("userBio") || "Hey there! I am using CodeChat. 🚀";
-let currentSavedAvatar = localStorage.getItem("userAvatar") || "";
+    <section class="action-buttons-group">
 
-document.getElementById("displayEmail").innerHTML = `📧 ${userEmail}`;
-document.getElementById("displayUsername").innerText = calculatedUsername;
-document.getElementById("topNavUsername").innerText = calculatedUsername.toLowerCase();
-document.getElementById("displayBio").innerText = currentSavedBio;
+      <button
+        class="btn btn-secondary"
+        onclick="toggleBioEditor()"
+      >
 
-function renderAvatar() {
-    const avatarHolder = document.getElementById("avatarHolder");
-    if (currentSavedAvatar && currentSavedAvatar.trim() !== "") {
-        avatarHolder.innerHTML = `<img src="${currentSavedAvatar}" class="avatar-large" id="profileAvatar" onerror="resetAvatarImg()">`;
-    } else {
-        avatarHolder.innerHTML = `<div class="avatar-large" id="profileAvatar">${calculatedUsername.charAt(0).toUpperCase()}</div>`;
+        <i
+          data-lucide="edit-3"
+          style="width:16px;"
+        ></i>
+
+        Edit Profile
+
+      </button>
+
+
+      <button
+        class="btn btn-primary"
+        onclick="location.href='search.html'"
+      >
+
+        <i
+          data-lucide="message-circle"
+          style="width:16px;"
+        ></i>
+
+        Find People
+
+      </button>
+
+    </section>
+
+
+    <!-- Profile tabs -->
+
+    <nav class="profile-tabs">
+
+      <button
+        class="tab active"
+        aria-label="Posts"
+      >
+        <i data-lucide="grid-3x3"></i>
+      </button>
+
+      <button
+        class="tab"
+        aria-label="Reels"
+        onclick="location.href='reels.html'"
+      >
+        <i data-lucide="clapperboard"></i>
+      </button>
+
+      <button
+        class="tab"
+        aria-label="Saved"
+      >
+        <i data-lucide="bookmark"></i>
+      </button>
+
+    </nav>
+
+
+    <div
+      id="profileContent"
+      class="loading"
+    >
+      Your posts will appear here.
+    </div>
+
+  </main>
+
+
+  <script type="module">
+
+    import {
+      initializeApp
+    } from
+      "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+
+    import {
+      getAuth,
+      onAuthStateChanged
+    } from
+      "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      updateDoc,
+      setDoc
+    } from
+      "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+
+    const firebaseConfig = {
+
+      apiKey:
+        "AIzaSyDgOaEVjw-L7O83Wj-N7j_XQYO8RuX4sQU",
+
+      authDomain:
+        "code-chat-a82d0.firebaseapp.com",
+
+      projectId:
+        "code-chat-a82d0",
+
+      storageBucket:
+        "code-chat-a82d0.firebasestorage.app",
+
+      messagingSenderId:
+        "863595576976",
+
+      appId:
+        "1:863595576976:web:61217f6961e3e3a5016215"
+
+    };
+
+
+    const app =
+      initializeApp(firebaseConfig);
+
+    const auth =
+      getAuth(app);
+
+    const db =
+      getFirestore(app);
+
+
+    let currentUser = null;
+
+    let currentProfile = null;
+
+
+    const profileAvatar =
+      document.getElementById("profileAvatar");
+
+    const avatarHolder =
+      document.getElementById("avatarHolder");
+
+    const displayName =
+      document.getElementById("displayName");
+
+    const displayUsername =
+      document.getElementById("displayUsername");
+
+    const displayEmail =
+      document.getElementById("displayEmail");
+
+    const displayBio =
+      document.getElementById("displayBio");
+
+    const topNavUsername =
+      document.getElementById("topNavUsername");
+
+    const countPosts =
+      document.getElementById("countPosts");
+
+    const countFollowers =
+      document.getElementById("countFollowers");
+
+    const countFollowing =
+      document.getElementById("countFollowing");
+
+    const profileContent =
+      document.getElementById("profileContent");
+
+
+    // Authentication check
+
+    onAuthStateChanged(
+      auth,
+      async (user) => {
+
+        if (!user) {
+
+          window.location.href =
+            "login.html";
+
+          return;
+
+        }
+
+
+        currentUser = user;
+
+        await loadProfile(user.uid);
+
+      }
+    );
+
+
+    // Load profile from Firestore
+
+    async function loadProfile(uid) {
+
+      try {
+
+        const userRef =
+          doc(
+            db,
+            "users",
+            uid
+          );
+
+
+        const userSnap =
+          await getDoc(userRef);
+
+
+        if (!userSnap.exists()) {
+
+          // Create missing profile document
+          await setDoc(
+            userRef,
+            {
+              uid: uid,
+              username:
+                currentUser.email
+                  ? currentUser.email.split("@")[0]
+                  : "user",
+
+              displayName:
+                currentUser.email
+                  ? currentUser.email.split("@")[0]
+                  : "User",
+
+              email:
+                currentUser.email || "",
+
+              bio: "",
+              photoURL: "",
+
+              followersCount: 0,
+              followingCount: 0,
+              postsCount: 0,
+
+              createdAt: Date.now()
+            }
+          );
+
+          currentProfile = {
+            username:
+              currentUser.email.split("@")[0],
+
+            displayName:
+              currentUser.email.split("@")[0],
+
+            email:
+              currentUser.email || "",
+
+            bio: "",
+            photoURL: "",
+
+            followersCount: 0,
+            followingCount: 0,
+            postsCount: 0
+          };
+
+        } else {
+
+          currentProfile =
+            userSnap.data();
+
+        }
+
+
+        renderProfile();
+
+
+      } catch (error) {
+
+        console.error(
+          "Profile loading error:",
+          error
+        );
+
+        profileContent.className =
+          "error";
+
+        profileContent.textContent =
+          "Unable to load your profile.";
+
+      }
+
     }
-}
 
-window.resetAvatarImg = function() {
-    localStorage.removeItem("userAvatar");
-    currentSavedAvatar = "";
-    renderAvatar();
-};
 
-// Functions for File & Camera Handling
-window.triggerProfilePicUpload = function() {
-    document.getElementById("profileFileInput").click();
-};
+    // Render profile
 
-window.uploadProfilePic = function(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            currentSavedAvatar = e.target.result;
-            localStorage.setItem("userAvatar", currentSavedAvatar); // Saves photo raw data
-            renderAvatar();
+    function renderProfile() {
+
+      const username =
+        currentProfile.username ||
+        "user";
+
+      const name =
+        currentProfile.displayName ||
+        username;
+
+      const email =
+        currentProfile.email ||
+        currentUser.email ||
+        "";
+
+      const bio =
+        currentProfile.bio ||
+        "Welcome to CodeChat! 🚀";
+
+
+      displayName.textContent =
+        name;
+
+      displayUsername.textContent =
+        "@" + username;
+
+      displayEmail.textContent =
+        "📧 " + email;
+
+      displayBio.textContent =
+        bio;
+
+      topNavUsername.textContent =
+        username;
+
+
+      countPosts.textContent =
+        currentProfile.postsCount || 0;
+
+      countFollowers.textContent =
+        currentProfile.followersCount || 0;
+
+      countFollowing.textContent =
+        currentProfile.followingCount || 0;
+
+
+      renderAvatar(
+        currentProfile.photoURL,
+        username
+      );
+
+    }
+
+
+    // Render avatar safely
+
+    function renderAvatar(
+      photoURL,
+      username
+    ) {
+
+      avatarHolder.innerHTML = "";
+
+
+      if (photoURL) {
+
+        const image =
+          document.createElement("img");
+
+        image.className =
+          "avatar-large";
+
+        image.alt =
+          "Profile picture";
+
+        image.src =
+          photoURL;
+
+
+        image.onerror = () => {
+
+          renderDefaultAvatar(username);
+
         };
-        reader.readAsDataURL(file);
+
+
+        avatarHolder.appendChild(
+          image
+        );
+
+      } else {
+
+        renderDefaultAvatar(
+          username
+        );
+
+      }
+
     }
-};
 
-renderAvatar();
 
-window.toggleBioEditor = function() {
-    const editBox = document.getElementById("bioEditBox");
-    const bioText = document.getElementById("displayBio");
-    const inputField = document.getElementById("bioInput");
+    function renderDefaultAvatar(
+      username
+    ) {
 
-    if (editBox.style.display === "flex") {
-        editBox.style.display = "none";
-        bioText.style.display = "block";
-    } else {
-        editBox.style.display = "flex";
-        bioText.style.display = "none";
-        inputField.value = currentSavedBio;
-        inputField.focus();
+      const avatar =
+        document.createElement("div");
+
+      avatar.className =
+        "avatar-large";
+
+      avatar.textContent =
+        (username || "U")
+          .charAt(0)
+          .toUpperCase();
+
+      avatarHolder.appendChild(
+        avatar
+      );
+
     }
-};
 
-window.saveProfileData = function() {
-    const newBio = document.getElementById("bioInput").value.trim();
-    if (newBio !== "") {
-        currentSavedBio = newBio;
-        localStorage.setItem("userBio", newBio);
-        document.getElementById("displayBio").innerText = newBio;
-    }
-    toggleBioEditor();
-};
-</script>
+
+    // Open image picker
+
+    window.triggerProfilePicUpload =
+      function () {
+
+        document
+          .getElementById(
+            "profileFileInput"
+          )
+          .click();
+
+      };
+
+
+    /*
+      Temporary local preview.
+
+      Real permanent image upload will be
+      connected to Firebase Storage when
+      the media system is implemented.
+    */
+
+    document
+      .getElementById("profileFileInput")
+      .addEventListener(
+        "change",
+        (event) => {
+
+          const file =
+            event.target.files[0];
+
+          if (!file) return;
+
+
+          if (
+            !file.type.startsWith(
+              "image/"
+            )
+          ) {
+
+            alert(
+              "Please select an image."
+            );
+
+            return;
+
+          }
+
+
+          const reader =
+            new FileReader();
+
+
+          reader.onload =
+            (e) => {
+
+              renderAvatar(
+                e.target.result,
+                currentProfile.username
+              );
+
+            };
+
+
+          reader.readAsDataURL(file);
+
+        }
+      );
+
+
+    // Toggle bio editor
+
+    window.toggleBioEditor =
+      function () {
+
+        const box =
+          document.getElementById(
+            "bioEditBox"
+          );
+
+        const input =
+          document.getElementById(
+            "bioInput"
+          );
+
+
+        if (
+          box.style.display ===
+          "flex"
+        ) {
+
+          box.style.display =
+            "none";
+
+          displayBio.style.display =
+            "block";
+
+          return;
+
+        }
+
+
+        input.value =
+          currentProfile.bio || "";
+
+        box.style.display =
+          "flex";
+
+        displayBio.style.display =
+          "none";
+
+        input.focus();
+
+      };
+
+
+    // Save bio to Firestore
+
+    window.saveProfileData =
+      async function () {
+
+        if (!currentUser) return;
+
+
+        const input =
+          document.getElementById(
+            "bioInput"
+          );
+
+        const saveBtn =
+          document.getElementById(
+            "saveBioBtn"
+          );
+
+
+        const newBio =
+          input.value.trim();
+
+
+        try {
+
+          saveBtn.disabled = true;
+
+          saveBtn.textContent =
+            "Saving...";
+
+
+          await updateDoc(
+            doc(
+              db,
+              "users",
+              currentUser.uid
+            ),
+            {
+              bio: newBio
+            }
+          );
+
+
+          currentProfile.bio =
+            newBio;
+
+
+          displayBio.textContent =
+            newBio ||
+            "Welcome to CodeChat! 🚀";
+
+
+          toggleBioEditor();
+
+
+        } catch (error) {
+
+          console.error(
+            "Bio update error:",
+            error
+          );
+
+          alert(
+            "Unable to save your bio."
+          );
+
+
+        } finally {
+
+          saveBtn.disabled =
+            false;
+
+          saveBtn.textContent =
+            "Save Profile";
+
+        }
+
+      };
+
+
+    // Initialize Lucide icons
+
+    lucide.createIcons();
+
+  </script>
+
 </body>
 </html>
