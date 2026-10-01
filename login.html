@@ -1,95 +1,383 @@
-<!DOCTYPE html><html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-<title>CodeChat Login</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>CodeChat — Login</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #0f172a;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 420px;
+      background: #111827;
+      padding: 30px 24px;
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 30px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #94a3b8;
+      margin-bottom: 28px;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 14px;
+      color: #cbd5e1;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      background: #0f172a;
+      color: white;
+      outline: none;
+      font-size: 15px;
+    }
+
+    input:focus {
+      border-color: #2563eb;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: #2563eb;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .login-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .result {
+      min-height: 22px;
+      text-align: center;
+      margin-top: 16px;
+      font-size: 14px;
+    }
+
+    .signup-link {
+      text-align: center;
+      margin-top: 22px;
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+    .signup-link a {
+      color: #60a5fa;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .signup-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
-<body><h1>Login</h1><input id="email" type="email" placeholder="Email"><br><br>
-<input id="password" type="password" placeholder="Password"><br><br>
 
-<button onclick="login()">Login</button>
+<body>
 
-<p id="result"></p><script type="module">
+  <main class="login-container">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    <div class="logo">💬 CodeChat</div>
 
-import {
-getAuth,
-signInWithEmailAndPassword
-}
-from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    <p class="subtitle">
+      Connect. Communicate. Create.
+    </p>
 
-import {
-getFirestore,
-doc,
-setDoc
-}
-from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    <form id="loginForm">
 
-const firebaseConfig = {
-apiKey: "AIzaSyDgOaEVjw-L7O83Wj-N7j_XQYO8RuX4sQU",
-authDomain: "code-chat-a82d0.firebaseapp.com",
-projectId: "code-chat-a82d0",
-storageBucket: "code-chat-a82d0.firebasestorage.app",
-messagingSenderId: "863595576976",
-appId: "1:863595576976:web:61217f6961e3e3a5016215"
-};
+      <div class="form-group">
+        <label for="email">Email</label>
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+        <input
+          id="email"
+          type="email"
+          placeholder="Enter your email"
+          autocomplete="email"
+          required
+        >
+      </div>
 
-window.login = async function(){
+      <div class="form-group">
+        <label for="password">Password</label>
 
-const email =
-document.getElementById("email").value;
+        <input
+          id="password"
+          type="password"
+          placeholder="Enter your password"
+          autocomplete="current-password"
+          required
+        >
+      </div>
 
-const password =
-document.getElementById("password").value;
+      <button
+        id="loginBtn"
+        class="login-btn"
+        type="submit"
+      >
+        Login
+      </button>
 
-try{
+    </form>
 
-const userCredential =
-await signInWithEmailAndPassword(
-auth,
-email,
-password
-);
+    <p id="result" class="result"></p>
 
-localStorage.setItem(
-"uid",
-userCredential.user.uid
-);
+    <p class="signup-link">
+      Don't have an account?
+      <a href="signup.html">Create Account</a>
+    </p>
 
-localStorage.setItem(
-"email",
-userCredential.user.email
-);
+  </main>
 
-await setDoc(
-doc(db,"userStatus",userCredential.user.uid),
-{
-uid:userCredential.user.uid,
-online:true,
-lastSeen:Date.now()
-},
-{merge:true}
-);
 
-document.getElementById("result").innerHTML =
-"Login Successful";
+  <script type="module">
 
-setTimeout(()=>{
-window.location.href="chat.html";
-},1000);
+    import { initializeApp } from
+      "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 
-}catch(error){
+    import {
+      getAuth,
+      signInWithEmailAndPassword
+    } from
+      "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
-document.getElementById("result").innerHTML =
-error.message;
+    import {
+      getFirestore,
+      doc,
+      setDoc
+    } from
+      "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-}
 
-}
+    // Firebase configuration
+    const firebaseConfig = {
 
-</script></body>
+      apiKey: "AIzaSyDgOaEVjw-L7O83Wj-N7j_XQYO8RuX4sQU",
+
+      authDomain:
+        "code-chat-a82d0.firebaseapp.com",
+
+      projectId:
+        "code-chat-a82d0",
+
+      storageBucket:
+        "code-chat-a82d0.firebasestorage.app",
+
+      messagingSenderId:
+        "863595576976",
+
+      appId:
+        "1:863595576976:web:61217f6961e3e3a5016215"
+
+    };
+
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+
+    const auth = getAuth(app);
+
+    const db = getFirestore(app);
+
+
+    const loginForm =
+      document.getElementById("loginForm");
+
+    const loginBtn =
+      document.getElementById("loginBtn");
+
+    const result =
+      document.getElementById("result");
+
+
+    // Login
+    loginForm.addEventListener("submit", async (event) => {
+
+      event.preventDefault();
+
+
+      const email =
+        document.getElementById("email").value.trim();
+
+      const password =
+        document.getElementById("password").value;
+
+
+      if (!email || !password) {
+
+        result.textContent =
+          "Please enter your email and password.";
+
+        return;
+      }
+
+
+      try {
+
+        loginBtn.disabled = true;
+
+        loginBtn.textContent = "Logging in...";
+
+        result.textContent = "";
+
+
+        const userCredential =
+          await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+
+
+        const user =
+          userCredential.user;
+
+
+        // Save basic local session information
+        localStorage.setItem(
+          "uid",
+          user.uid
+        );
+
+        localStorage.setItem(
+          "email",
+          user.email || ""
+        );
+
+
+        // Update online status
+        await setDoc(
+          doc(
+            db,
+            "userStatus",
+            user.uid
+          ),
+          {
+            uid: user.uid,
+            online: true,
+            lastSeen: Date.now()
+          },
+          {
+            merge: true
+          }
+        );
+
+
+        result.textContent =
+          "Login successful. Opening CodeChat...";
+
+
+        setTimeout(() => {
+
+          window.location.href =
+            "chat.html";
+
+        }, 700);
+
+
+      } catch (error) {
+
+        console.error(
+          "Login error:",
+          error
+        );
+
+
+        let message =
+          "Unable to log in. Please try again.";
+
+
+        if (
+          error.code ===
+          "auth/invalid-credential"
+        ) {
+
+          message =
+            "Incorrect email or password.";
+
+        } else if (
+          error.code ===
+          "auth/user-not-found"
+        ) {
+
+          message =
+            "No account found with this email.";
+
+        } else if (
+          error.code ===
+          "auth/wrong-password"
+        ) {
+
+          message =
+            "Incorrect password.";
+
+        } else if (
+          error.code ===
+          "auth/invalid-email"
+        ) {
+
+          message =
+            "Please enter a valid email.";
+
+        }
+
+
+        result.textContent = message;
+
+
+        loginBtn.disabled = false;
+
+        loginBtn.textContent = "Login";
+
+      }
+
+    });
+
+  </script>
+
+</body>
 </html>
