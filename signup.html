@@ -1,79 +1,481 @@
-<!DOCTYPE html><html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-<title>CodeChat Signup</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>CodeChat — Create Account</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #0f172a;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .signup-container {
+      width: 100%;
+      max-width: 420px;
+      background: #111827;
+      padding: 30px 24px;
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 30px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #94a3b8;
+      margin-bottom: 28px;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 14px;
+      color: #cbd5e1;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      background: #0f172a;
+      color: white;
+      outline: none;
+      font-size: 15px;
+    }
+
+    input:focus {
+      border-color: #2563eb;
+    }
+
+    .signup-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: #2563eb;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .signup-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .result {
+      min-height: 22px;
+      text-align: center;
+      margin-top: 16px;
+      font-size: 14px;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 22px;
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+    .login-link a {
+      color: #60a5fa;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+
+    .password-info {
+      color: #64748b;
+      font-size: 12px;
+      margin-top: 6px;
+    }
+  </style>
 </head>
-<body><h1>Create Account</h1><input id="username" type="text" placeholder="Username"><br><br>
 
-<input id="email" type="email" placeholder="Email"><br><br>
+<body>
 
-<input id="password" type="password" placeholder="Password"><br><br>
+  <main class="signup-container">
 
-<button onclick="signup()">Create Account</button>
+    <div class="logo">💬 CodeChat</div>
 
-<p id="result"></p><script type="module">
+    <p class="subtitle">
+      Create your CodeChat account
+    </p>
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 
-import {
-getAuth,
-createUserWithEmailAndPassword
-}
-from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    <form id="signupForm">
 
-import {
-getFirestore,
-collection,
-addDoc
-}
-from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+      <div class="form-group">
 
-const firebaseConfig = {
-apiKey: "AIzaSyDgOaEVjw-L7O83Wj-N7j_XQYO8RuX4sQU",
-authDomain: "code-chat-a82d0.firebaseapp.com",
-projectId: "code-chat-a82d0",
-storageBucket: "code-chat-a82d0.firebasestorage.app",
-messagingSenderId: "863595576976",
-appId: "1:863595576976:web:61217f6961e3e3a5016215"
-};
+        <label for="username">
+          Username
+        </label>
 
-const app = initializeApp(firebaseConfig);
+        <input
+          id="username"
+          type="text"
+          placeholder="Choose a username"
+          autocomplete="username"
+          minlength="3"
+          maxlength="30"
+          required
+        >
 
-const auth = getAuth(app);
-const db = getFirestore(app);
+      </div>
 
-window.signup = async function(){
 
-const username = document.getElementById("username").value;
-const email = document.getElementById("email").value;
-const password = document.getElementById("password").value;
+      <div class="form-group">
 
-try{
+        <label for="email">
+          Email
+        </label>
 
-const userCredential =
-await createUserWithEmailAndPassword(auth,email,password);
+        <input
+          id="email"
+          type="email"
+          placeholder="Enter your email"
+          autocomplete="email"
+          required
+        >
 
-await addDoc(collection(db,"users"),{
-username: username,
-email: email,
-uid: userCredential.user.uid
-});
+      </div>
 
-document.getElementById("result").innerHTML =
-"Account Created Successfully";
 
-setTimeout(()=>{
-window.location.href="login.html";
-},1000);
+      <div class="form-group">
 
-}catch(error){
+        <label for="password">
+          Password
+        </label>
 
-document.getElementById("result").innerHTML =
-error.message;
+        <input
+          id="password"
+          type="password"
+          placeholder="Create a password"
+          autocomplete="new-password"
+          minlength="6"
+          required
+        >
 
-}
+        <p class="password-info">
+          Password must contain at least 6 characters.
+        </p>
 
-}
+      </div>
 
-</script></body>
+
+      <button
+        id="signupBtn"
+        class="signup-btn"
+        type="submit"
+      >
+        Create Account
+      </button>
+
+    </form>
+
+
+    <p
+      id="result"
+      class="result"
+    ></p>
+
+
+    <p class="login-link">
+
+      Already have an account?
+
+      <a href="login.html">
+        Login
+      </a>
+
+    </p>
+
+  </main>
+
+
+  <script type="module">
+
+    import {
+      initializeApp
+    } from
+      "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+
+    import {
+      getAuth,
+      createUserWithEmailAndPassword
+    } from
+      "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+
+    import {
+      getFirestore,
+      doc,
+      setDoc
+    } from
+      "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+
+    // Firebase configuration
+    const firebaseConfig = {
+
+      apiKey:
+        "AIzaSyDgOaEVjw-L7O83Wj-N7j_XQYO8RuX4sQU",
+
+      authDomain:
+        "code-chat-a82d0.firebaseapp.com",
+
+      projectId:
+        "code-chat-a82d0",
+
+      storageBucket:
+        "code-chat-a82d0.firebasestorage.app",
+
+      messagingSenderId:
+        "863595576976",
+
+      appId:
+        "1:863595576976:web:61217f6961e3e3a5016215"
+
+    };
+
+
+    // Initialize Firebase
+    const app =
+      initializeApp(firebaseConfig);
+
+    const auth =
+      getAuth(app);
+
+    const db =
+      getFirestore(app);
+
+
+    const signupForm =
+      document.getElementById("signupForm");
+
+    const signupBtn =
+      document.getElementById("signupBtn");
+
+    const result =
+      document.getElementById("result");
+
+
+    // Create account
+    signupForm.addEventListener(
+      "submit",
+      async (event) => {
+
+        event.preventDefault();
+
+
+        const username =
+          document
+            .getElementById("username")
+            .value
+            .trim();
+
+        const email =
+          document
+            .getElementById("email")
+            .value
+            .trim();
+
+        const password =
+          document
+            .getElementById("password")
+            .value;
+
+
+        if (username.length < 3) {
+
+          result.textContent =
+            "Username must contain at least 3 characters.";
+
+          return;
+
+        }
+
+
+        try {
+
+          signupBtn.disabled = true;
+
+          signupBtn.textContent =
+            "Creating account...";
+
+          result.textContent = "";
+
+
+          // Create Firebase Authentication account
+          const userCredential =
+            await createUserWithEmailAndPassword(
+              auth,
+              email,
+              password
+            );
+
+
+          const user =
+            userCredential.user;
+
+
+          /*
+            Store user profile using UID
+            instead of a random document ID.
+          */
+          await setDoc(
+            doc(
+              db,
+              "users",
+              user.uid
+            ),
+            {
+
+              uid:
+                user.uid,
+
+              username:
+                username,
+
+              displayName:
+                username,
+
+              email:
+                email,
+
+              bio:
+                "",
+
+              photoURL:
+                "",
+
+              followersCount:
+                0,
+
+              followingCount:
+                0,
+
+              postsCount:
+                0,
+
+              createdAt:
+                Date.now()
+
+            }
+          );
+
+
+          // Save session information
+          localStorage.setItem(
+            "uid",
+            user.uid
+          );
+
+          localStorage.setItem(
+            "email",
+            user.email || ""
+          );
+
+
+          result.textContent =
+            "Account created successfully!";
+
+
+          setTimeout(() => {
+
+            window.location.href =
+              "chat.html";
+
+          }, 800);
+
+
+        } catch (error) {
+
+          console.error(
+            "Signup error:",
+            error
+          );
+
+
+          let message =
+            "Unable to create account. Please try again.";
+
+
+          if (
+            error.code ===
+            "auth/email-already-in-use"
+          ) {
+
+            message =
+              "This email is already registered.";
+
+          } else if (
+            error.code ===
+            "auth/invalid-email"
+          ) {
+
+            message =
+              "Please enter a valid email.";
+
+          } else if (
+            error.code ===
+            "auth/weak-password"
+          ) {
+
+            message =
+              "Password is too weak.";
+
+          }
+
+
+          result.textContent =
+            message;
+
+
+          signupBtn.disabled = false;
+
+          signupBtn.textContent =
+            "Create Account";
+
+        }
+
+      }
+    );
+
+  </script>
+
+</body>
 </html>
