@@ -1,89 +1,974 @@
-<!DOCTYPE html><html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Settings</title><style>
-body{
-background:#0f172a;
-color:white;
-font-family:Arial,sans-serif;
-margin:0;
-padding:20px;
-}
 
-h1{
-text-align:center;
-}
+  <meta charset="UTF-8">
 
-.box{
-background:#1e293b;
-padding:15px;
-border-radius:12px;
-margin-top:15px;
-}
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-button{
-width:100%;
-padding:12px;
-border:none;
-border-radius:10px;
-background:#2563eb;
-color:white;
-font-size:16px;
-margin-top:10px;
-cursor:pointer;
-}
-</style></head><body><h1>⚙️ Settings</h1><div class="box"><p>CodeChat Settings</p><button onclick="window.location.href='chat.html'">
-💬 Back To Chat
-</button><button onclick="logout()">
-🚪 Logout
-</button></div><script type="module">
+  <title>Settings — CodeChat</title>
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+  <style>
+
+    :root {
+      --bg: #000;
+      --surface: #111;
+      --surface-2: #1b1b1b;
+      --border: #292929;
+      --text: #f5f5f5;
+      --muted: #a8a8a8;
+      --primary: #0095f6;
+      --danger: #ff4d4f;
+    }
+
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+    }
+
+
+    body {
+      min-height: 100vh;
+
+      background: var(--bg);
+
+      color: var(--text);
+
+      display: flex;
+
+      justify-content: center;
+    }
+
+
+    .settings-container {
+      width: 100%;
+      max-width: 520px;
+
+      min-height: 100vh;
+
+      padding: 18px 16px 35px;
+    }
+
+
+    /* Header */
+
+    .header {
+      height: 50px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      margin-bottom: 25px;
+    }
+
+
+    .back-btn {
+      width: 40px;
+      height: 40px;
+
+      border: none;
+
+      border-radius: 50%;
+
+      background: transparent;
+
+      color: white;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      cursor: pointer;
+    }
+
+
+    .back-btn:active {
+      background: #1e1e1e;
+    }
+
+
+    .header h1 {
+      font-size: 20px;
+
+      font-weight: 700;
+    }
+
+
+    .header-spacer {
+      width: 40px;
+    }
+
+
+    /* User card */
+
+    .user-card {
+      display: flex;
+
+      align-items: center;
+
+      gap: 14px;
+
+      padding: 15px;
+
+      background: var(--surface);
+
+      border: 1px solid var(--border);
+
+      border-radius: 16px;
+
+      margin-bottom: 20px;
+    }
+
+
+    .avatar {
+      width: 54px;
+      height: 54px;
+
+      border-radius: 50%;
+
+      background:
+        linear-gradient(
+          135deg,
+          #4f46e5,
+          #06b6d4
+        );
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      font-size: 20px;
+
+      font-weight: 700;
+    }
+
+
+    .user-info {
+      min-width: 0;
+    }
+
+
+    .user-info h2 {
+      font-size: 16px;
+
+      margin-bottom: 4px;
+    }
+
+
+    .user-info p {
+      color: var(--muted);
+
+      font-size: 13px;
+
+      overflow: hidden;
+
+      text-overflow: ellipsis;
+
+      white-space: nowrap;
+    }
+
+
+    /* Settings section */
+
+    .section-title {
+      color: var(--muted);
+
+      font-size: 12px;
+
+      font-weight: 600;
+
+      text-transform: uppercase;
+
+      letter-spacing: 0.7px;
+
+      margin:
+        22px 4px 8px;
+    }
+
+
+    .settings-card {
+      background: var(--surface);
+
+      border: 1px solid var(--border);
+
+      border-radius: 16px;
+
+      overflow: hidden;
+    }
+
+
+    .setting-button {
+      width: 100%;
+
+      min-height: 58px;
+
+      padding: 12px 15px;
+
+      border: none;
+
+      border-bottom: 1px solid var(--border);
+
+      background: transparent;
+
+      color: white;
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 13px;
+
+      text-align: left;
+
+      cursor: pointer;
+    }
+
+
+    .setting-button:last-child {
+      border-bottom: none;
+    }
+
+
+    .setting-button:active {
+      background: var(--surface-2);
+    }
+
+
+    .setting-icon {
+      width: 34px;
+      height: 34px;
+
+      border-radius: 10px;
+
+      background: #202020;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      flex-shrink: 0;
+    }
+
+
+    .setting-content {
+      flex: 1;
+    }
+
+
+    .setting-content strong {
+      display: block;
+
+      font-size: 14px;
+
+      margin-bottom: 3px;
+    }
+
+
+    .setting-content span {
+      display: block;
+
+      color: var(--muted);
+
+      font-size: 12px;
+    }
+
+
+    .arrow {
+      color: #777;
+    }
+
+
+    /* Logout */
+
+    .logout-button {
+      width: 100%;
+
+      margin-top: 25px;
+
+      padding: 13px;
+
+      border: 1px solid #5a2020;
+
+      border-radius: 12px;
+
+      background: #1d0b0b;
+
+      color: #ff6464;
+
+      font-size: 15px;
+
+      font-weight: 600;
+
+      cursor: pointer;
+    }
+
+
+    .logout-button:disabled {
+      opacity: 0.6;
+
+      cursor: not-allowed;
+    }
+
+
+    .status-message {
+      min-height: 20px;
+
+      text-align: center;
+
+      color: var(--muted);
+
+      font-size: 13px;
+
+      margin-top: 12px;
+    }
+
+  </style>
+
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+</head>
+
+
+<body>
+
+
+<main class="settings-container">
+
+
+  <!-- Header -->
+
+  <header class="header">
+
+    <button
+      class="back-btn"
+      onclick="history.back()"
+      aria-label="Go back"
+    >
+
+      <i data-lucide="arrow-left"></i>
+
+    </button>
+
+
+    <h1>
+      Settings
+    </h1>
+
+
+    <div class="header-spacer"></div>
+
+  </header>
+
+
+  <!-- User -->
+
+  <section class="user-card">
+
+    <div
+      class="avatar"
+      id="avatar"
+    >
+      U
+    </div>
+
+
+    <div class="user-info">
+
+      <h2 id="username">
+        Loading...
+      </h2>
+
+      <p id="email">
+        Loading...
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <!-- Account -->
+
+  <div class="section-title">
+    Account
+  </div>
+
+
+  <section class="settings-card">
+
+
+    <button
+      class="setting-button"
+      onclick="location.href='profile.html'"
+    >
+
+      <div class="setting-icon">
+
+        <i data-lucide="user"></i>
+
+      </div>
+
+
+      <div class="setting-content">
+
+        <strong>
+          Profile
+        </strong>
+
+        <span>
+          Edit your profile and bio
+        </span>
+
+      </div>
+
+
+      <i
+        class="arrow"
+        data-lucide="chevron-right"
+      ></i>
+
+    </button>
+
+
+    <button
+      class="setting-button"
+      onclick="location.href='search.html'"
+    >
+
+      <div class="setting-icon">
+
+        <i data-lucide="users"></i>
+
+      </div>
+
+
+      <div class="setting-content">
+
+        <strong>
+          Discover People
+        </strong>
+
+        <span>
+          Find people and start conversations
+        </span>
+
+      </div>
+
+
+      <i
+        class="arrow"
+        data-lucide="chevron-right"
+      ></i>
+
+    </button>
+
+
+  </section>
+
+
+  <!-- App -->
+
+  <div class="section-title">
+    App
+  </div>
+
+
+  <section class="settings-card">
+
+
+    <button
+      class="setting-button"
+      onclick="alert('Theme settings will be added soon.')"
+    >
+
+      <div class="setting-icon">
+
+        <i data-lucide="palette"></i>
+
+      </div>
+
+
+      <div class="setting-content">
+
+        <strong>
+          Appearance
+        </strong>
+
+        <span>
+          Theme and display preferences
+        </span>
+
+      </div>
+
+
+      <i
+        class="arrow"
+        data-lucide="chevron-right"
+      ></i>
+
+    </button>
+
+
+    <button
+      class="setting-button"
+      onclick="alert('Notification settings will be added soon.')"
+    >
+
+      <div class="setting-icon">
+
+        <i data-lucide="bell"></i>
+
+      </div>
+
+
+      <div class="setting-content">
+
+        <strong>
+          Notifications
+        </strong>
+
+        <span>
+          Manage your notifications
+        </span>
+
+      </div>
+
+
+      <i
+        class="arrow"
+        data-lucide="chevron-right"
+      ></i>
+
+    </button>
+
+
+    <button
+      class="setting-button"
+      onclick="alert('Privacy settings will be added soon.')"
+    >
+
+      <div class="setting-icon">
+
+        <i data-lucide="shield"></i>
+
+      </div>
+
+
+      <div class="setting-content">
+
+        <strong>
+          Privacy
+        </strong>
+
+        <span>
+          Control your account privacy
+        </span>
+
+      </div>
+
+
+      <i
+        class="arrow"
+        data-lucide="chevron-right"
+      ></i>
+
+    </button>
+
+
+  </section>
+
+
+  <!-- Logout -->
+
+  <button
+    id="logoutBtn"
+    class="logout-button"
+  >
+
+    🚪 Log Out
+
+  </button>
+
+
+  <p
+    id="statusMessage"
+    class="status-message"
+  ></p>
+
+
+</main>
+
+
+<script type="module">
+
 
 import {
-getFirestore,
-doc,
-setDoc
-}
-from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+  initializeApp
+} from
+  "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+
+import {
+  getAuth,
+  onAuthStateChanged,
+  signOut
+} from
+  "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc
+} from
+  "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
 
 const firebaseConfig = {
-apiKey:"AIzaSyDgOaEVjw-L7O83Wj-N7j_XQYO8RuX4sQU",
-authDomain:"code-chat-a82d0.firebaseapp.com",
-projectId:"code-chat-a82d0",
-storageBucket:"code-chat-a82d0.firebasestorage.app",
-messagingSenderId:"863595576976",
-appId:"1:863595576976:web:61217f6961e3e3a5016215"
+
+  apiKey:
+    "AIzaSyDgOaEVjw-L7O83Wj-N7j_XQYO8RuX4sQU",
+
+  authDomain:
+    "code-chat-a82d0.firebaseapp.com",
+
+  projectId:
+    "code-chat-a82d0",
+
+  storageBucket:
+    "code-chat-a82d0.firebasestorage.app",
+
+  messagingSenderId:
+    "863595576976",
+
+  appId:
+    "1:863595576976:web:61217f6961e3e3a5016215"
+
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 
-window.logout = async function(){
+const app =
+  initializeApp(firebaseConfig);
 
-const uid = localStorage.getItem("uid");
+const auth =
+  getAuth(app);
 
-if(uid){
+const db =
+  getFirestore(app);
 
-await setDoc(
-doc(db,"userStatus",uid),
-{
-uid:uid,
-online:false,
-lastSeen:Date.now()
-},
-{merge:true}
+
+const usernameElement =
+  document.getElementById(
+    "username"
+  );
+
+const emailElement =
+  document.getElementById(
+    "email"
+  );
+
+const avatarElement =
+  document.getElementById(
+    "avatar"
+  );
+
+const logoutBtn =
+  document.getElementById(
+    "logoutBtn"
+  );
+
+const statusMessage =
+  document.getElementById(
+    "statusMessage"
+  );
+
+
+// Check authentication
+
+onAuthStateChanged(
+  auth,
+  async (user) => {
+
+    if (!user) {
+
+      window.location.href =
+        "login.html";
+
+      return;
+
+    }
+
+
+    emailElement.textContent =
+      user.email || "";
+
+
+    await loadUserProfile(
+      user.uid,
+      user.email
+    );
+
+  }
 );
 
+
+// Load user profile
+
+async function loadUserProfile(
+  uid,
+  email
+) {
+
+  try {
+
+    const userSnap =
+      await getDoc(
+        doc(
+          db,
+          "users",
+          uid
+        )
+      );
+
+
+    if (
+      !userSnap.exists()
+    ) {
+
+      const fallback =
+        email
+          ? email.split("@")[0]
+          : "user";
+
+
+      usernameElement.textContent =
+        fallback;
+
+      avatarElement.textContent =
+        fallback
+          .charAt(0)
+          .toUpperCase();
+
+      return;
+
+    }
+
+
+    const data =
+      userSnap.data();
+
+
+    const username =
+      data.username ||
+      "user";
+
+
+    const displayName =
+      data.displayName ||
+      username;
+
+
+    usernameElement.textContent =
+      displayName;
+
+
+    avatarElement.textContent =
+      username
+        .charAt(0)
+        .toUpperCase();
+
+
+    if (data.photoURL) {
+
+      const image =
+        document.createElement(
+          "img"
+        );
+
+      image.src =
+        data.photoURL;
+
+      image.alt =
+        "Profile picture";
+
+
+      image.style.width =
+        "100%";
+
+      image.style.height =
+        "100%";
+
+      image.style.objectFit =
+        "cover";
+
+
+      image.style.borderRadius =
+        "50%";
+
+
+      image.onerror =
+        () => {
+
+          image.remove();
+
+          avatarElement.textContent =
+            username
+              .charAt(0)
+              .toUpperCase();
+
+        };
+
+
+      avatarElement.textContent =
+        "";
+
+      avatarElement.appendChild(
+        image
+      );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Profile loading error:",
+      error
+    );
+
+  }
+
 }
 
-localStorage.removeItem("uid");
-localStorage.removeItem("email");
 
-window.location.href="login.html";
+// Logout
 
-}
+logoutBtn.addEventListener(
+  "click",
+  async () => {
 
-</script></body>
+    const confirmed =
+      confirm(
+        "Are you sure you want to log out?"
+      );
+
+
+    if (!confirmed) {
+      return;
+    }
+
+
+    try {
+
+      logoutBtn.disabled =
+        true;
+
+      logoutBtn.textContent =
+        "Logging out...";
+
+
+      const user =
+        auth.currentUser;
+
+
+      if (user) {
+
+        // Mark user offline
+
+        await setDoc(
+          doc(
+            db,
+            "userStatus",
+            user.uid
+          ),
+          {
+            uid: user.uid,
+            online: false,
+            lastSeen: Date.now()
+          },
+          {
+            merge: true
+          }
+        );
+
+      }
+
+
+      // Actually sign out from Firebase
+
+      await signOut(
+        auth
+      );
+
+
+      // Clear old local session data
+
+      localStorage.removeItem(
+        "uid"
+      );
+
+      localStorage.removeItem(
+        "email"
+      );
+
+
+      window.location.href =
+        "login.html";
+
+
+    } catch (error) {
+
+      console.error(
+        "Logout error:",
+        error
+      );
+
+
+      statusMessage.textContent =
+        "Unable to log out. Please try again.";
+
+
+      logoutBtn.disabled =
+        false;
+
+      logoutBtn.textContent =
+        "🚪 Log Out";
+
+    }
+
+  }
+);
+
+
+lucide.createIcons();
+
+</script>
+
+
+</body>
 </html>
